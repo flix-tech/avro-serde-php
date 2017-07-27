@@ -11,15 +11,13 @@
   ],
   "require": {
     "php": "~7.0",
-    "ext-rdkafka": "~3.0",
     "flix-tech/confluent-schema-registry-api": "~2.0",
     "widmogrod/php-functional": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~6.2",
     "phpstan/phpstan": "~0.6",
-    "friendsofphp/php-cs-fixer": "~2.0",
-    "kwn/php-rdkafka-stubs": "~1.0"
+    "friendsofphp/php-cs-fixer": "~2.0"
   },
   "autoload": {
     "files": [
