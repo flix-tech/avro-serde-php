@@ -9,7 +9,7 @@ use Widmogrod\Monad\IO;
 use Widmogrod\Primitive\Num;
 use Widmogrod\Primitive\Stringg;
 
-use function Widmogrod\Functional\curry;
+use function Widmogrod\Functional\curryN;
 use function Widmogrod\Functional\tryCatch;
 use function Widmogrod\Functional\valueOf;
 use function Widmogrod\Monad\Control\doo;
@@ -18,7 +18,6 @@ use function Widmogrod\Monad\IO\getLine;
 use function Widmogrod\Monad\IO\putStrLn;
 
 const WIRE_FORMAT_PROTOCOL_VERSION = 0;
-
 const PROTOCOL_ACCESSOR_VERSION = 'version';
 const PROTOCOL_ACCESSOR_SCHEMA_ID = 'schemaId';
 const PROTOCOL_ACCESSOR_AVRO = 'avro';
@@ -50,7 +49,7 @@ const encoder = '\FlixTech\AvroSerializer\Protocol\encoder';
 
 function encoder(): callable
 {
-    return curry(encode);
+    return curryN(2, encode);
 }
 
 
@@ -82,7 +81,7 @@ const decoder = '\FlixTech\AvroSerializer\Protocol\decoder';
 
 function decoder(): callable
 {
-    return curry(decode);
+    return curryN(1, decode);
 }
 
 const encodeIO = '\FlixTech\AvroSerializer\Protocol\encodeIO';

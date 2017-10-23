@@ -1,0 +1,3 @@
+
+quick-test:
+	./bin/ci
