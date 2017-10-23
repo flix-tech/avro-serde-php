@@ -11,8 +11,7 @@ use AvroStringIO;
 use Widmogrod\Monad\Either\Either;
 use Widmogrod\Monad\Either\Left;
 use Widmogrod\Monad\Either\Right;
-
-use function Widmogrod\Functional\curry;
+use function Widmogrod\Functional\curryN;
 use function Widmogrod\Functional\tryCatch;
 
 
@@ -47,7 +46,8 @@ function avroDatumWriter(): callable
     $writer  = new AvroIODatumWriter();
     $io = avroStringIo('');
 
-    return curry(
+    return curryN(
+        2,
         function(AvroSchema $schema, $record) use ($writer, $io): Either {
             return tryCatch(
                 function ($record) use ($schema, $writer, $io) {
@@ -71,15 +71,16 @@ function avroDatumReader(): callable
     $reader = new AvroIODatumReader();
     $io = avroStringIo('');
 
-    return curry(
-        function(AvroSchema $schema, $data) use ($reader, $io): Either {
+    return curryN(
+        3,
+        function(AvroSchema $writersSchema, AvroSchema $readersSchema, $data) use ($reader, $io): Either {
             return tryCatch(
-                function ($data) use ($schema, $reader, $io) {
+                function ($data) use ($writersSchema, $readersSchema, $reader, $io) {
                     $io->truncate();
                     $io->write($data);
                     $io->seek(0);
 
-                    return Right::of($reader->read_data($schema, $schema, avroBinaryDecoder($io)));
+                    return Right::of($reader->read_data($writersSchema, $readersSchema, avroBinaryDecoder($io)));
                 },
                 Left::of,
                 $data
