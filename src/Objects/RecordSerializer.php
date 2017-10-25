@@ -11,8 +11,13 @@ use GuzzleHttp\Promise\PromiseInterface;
 use const FlixTech\AvroSerializer\Common\get;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_AVRO;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_SCHEMA_ID;
+use const FlixTech\AvroSerializer\Protocol\WIRE_FORMAT_PROTOCOL_VERSION;
+use const Widmogrod\Functional\identity;
+use const Widmogrod\Functional\reThrow;
+use function FlixTech\AvroSerializer\Common\memoize;
 use function FlixTech\AvroSerializer\Protocol\decode;
 use function FlixTech\AvroSerializer\Protocol\encoder;
+use function FlixTech\AvroSerializer\Protocol\validator;
 use function FlixTech\AvroSerializer\Serialize\avroDatumReader;
 use function FlixTech\AvroSerializer\Serialize\avroDatumWriter;
 use function Widmogrod\Functional\curryN;
@@ -23,21 +28,6 @@ class RecordSerializer
      * @var Registry
      */
     private $registry;
-
-    /**
-     * @var callable[]
-     */
-    private $writers = [];
-
-    /**
-     * @var callable[]
-     */
-    private $readers = [];
-
-    /**
-     * @var callable[]
-     */
-    private $encoders = [];
 
     /**
      * @var callable
@@ -69,6 +59,11 @@ class RecordSerializer
      */
     private $registerMissingSchemas;
 
+    /**
+     * @var callable
+     */
+    private $protocolValidatorFunc;
+
     public function __construct(Registry $registry, array $options = [])
     {
         $this->registry = $registry;
@@ -76,12 +71,13 @@ class RecordSerializer
         $this->datumWriterFactoryFunc = avroDatumWriter();
         $this->datumReaderFactoryFunc = avroDatumReader();
 
-        $this->protocolEncoderFactoryFunc = encoder();
+        $this->protocolEncoderFactoryFunc = encoder(WIRE_FORMAT_PROTOCOL_VERSION);
+        $this->protocolValidatorFunc = validator(WIRE_FORMAT_PROTOCOL_VERSION);
 
         $get = curryN(2, get);
 
-        $this->schemaIdGetter = $get(PROTOCOL_ACCESSOR_AVRO);
-        $this->avroBinaryGetter = $get(PROTOCOL_ACCESSOR_SCHEMA_ID);
+        $this->schemaIdGetter = $get(PROTOCOL_ACCESSOR_SCHEMA_ID);
+        $this->avroBinaryGetter = $get(PROTOCOL_ACCESSOR_AVRO);
 
         $this->registerMissingSchemas = isset($options['register_missing_schemas'])
             ? (bool) $options['register_missing_schemas']
@@ -91,15 +87,16 @@ class RecordSerializer
     public function encodeRecord(string $subject, AvroSchema $schema, $record): string
     {
         $schemaId = $this->getSchemaIdForSchema($subject, $schema);
+        $cachedWriter = memoize($this->datumWriterFactoryFunc, [$schema], 'writer_' . $schemaId);
 
-        return ($this->getOrCreateCachedWriter($schema, $schemaId))($record)
-            ->bind($this->getOrCreateCachedEncoder($schemaId))
-            ->extract();
+        return $cachedWriter($record)
+            ->bind(memoize($this->protocolEncoderFactoryFunc, [$schemaId], 'encoder_' . $schemaId))
+            ->either(reThrow, identity);
     }
 
-    public function decodeMessage(string $message, AvroSchema $readersSchema = null)
+    public function decodeMessage(string $binaryMessage, AvroSchema $readersSchema = null)
     {
-        $decoded = decode($message);
+        $decoded = decode($binaryMessage);
         $schemaId = $decoded->bind($this->schemaIdGetter)->extract();
         $writersSchema = $this->extractValueFromRegistryResponse($this->registry->schemaForId($schemaId));
 
@@ -107,10 +104,14 @@ class RecordSerializer
             $readersSchema = $writersSchema;
         }
 
+        $cachedReader = memoize($this->datumReaderFactoryFunc, [$writersSchema], 'reader_' . $schemaId);
+
         return $decoded
+            ->bind($this->protocolValidatorFunc)
+            ->orElse(function () { throw new \InvalidArgumentException('Could not validate message wire protocol.'); })
             ->bind($this->avroBinaryGetter)
-            ->bind(($this->getOrCreateCachedReader($schemaId, $writersSchema))($readersSchema))
-            ->extract();
+            ->bind($cachedReader($readersSchema))
+            ->either(reThrow, identity);
     }
 
     private function getSchemaIdForSchema(string $subject, AvroSchema $schema): int
@@ -127,37 +128,14 @@ class RecordSerializer
         return $schemaId;
     }
 
-    private function getOrCreateCachedWriter(AvroSchema $schema, int $schemaId): callable
-    {
-        if (!array_key_exists($schemaId, $this->writers)) {
-            $this->writers[$schemaId] = call_user_func($this->datumWriterFactoryFunc, $schema);
-        }
-
-        return $this->writers[$schemaId];
-    }
-
-    private function getOrCreateCachedEncoder(int $schemaId): callable
-    {
-        if (!array_key_exists($schemaId, $this->encoders)) {
-            $this->encoders[$schemaId] = call_user_func($this->protocolEncoderFactoryFunc, $schemaId);
-        }
-
-        return $this->encoders[$schemaId];
-    }
-
-    private function getOrCreateCachedReader(int $schemaId, AvroSchema $writersSchema): callable
-    {
-        if (!array_key_exists($schemaId, $this->readers)) {
-            $this->readers[$schemaId] = call_user_func($this->datumReaderFactoryFunc, $writersSchema);
-        }
-
-        return $this->readers[$schemaId];
-    }
-
     private function extractValueFromRegistryResponse($response)
     {
         if ($response instanceof PromiseInterface) {
-            return $response->wait();
+            $response = $response->wait();
+
+            if ($response instanceof \Exception) {
+                throw $response;
+            }
         }
 
         return $response;
