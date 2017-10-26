@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": "~7.0",
-    "flix-tech/confluent-schema-registry-api": "~3.0",
+    "flix-tech/confluent-schema-registry-api": "~4.0",
     "widmogrod/php-functional": "dev-master@dev"
   },
   "require-dev": {
