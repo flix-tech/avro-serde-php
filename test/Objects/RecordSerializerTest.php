@@ -157,6 +157,43 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     */
+    public function it_should_register_new_subject_when_configured()
+    {
+        $recordSerializer = new RecordSerializer($this->registryMock, ['register_missing_subjects' => true]);
+
+        $this->registryMock
+            ->expects($this->exactly(2))
+            ->method('schemaId')
+            ->with('test', $this->avroSchema)
+            ->willThrowException(new SubjectNotFoundException());
+
+        $this->registryMock
+            ->expects($this->at(1))
+            ->method('register')
+            ->with('test', $this->avroSchema)
+            ->willReturn(self::SCHEMA_ID);
+
+        $this->registryMock
+            ->expects($this->at(3))
+            ->method('register')
+            ->with('test', $this->avroSchema)
+            ->willReturn(new FulfilledPromise(self::SCHEMA_ID));
+
+        $this->assertSame(
+            self::HEX_BIN,
+            bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+        );
+
+        // Second call to ensure memoized functions work as expected
+        $this->assertSame(
+            self::HEX_BIN,
+            bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+        );
+    }
+
+    /**
+     * @test
      *
      * @expectedException \FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException
      */

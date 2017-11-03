@@ -6,6 +6,8 @@ namespace FlixTech\AvroSerializer\Objects;
 
 use AvroSchema;
 use FlixTech\SchemaRegistryApi\Exception\SchemaNotFoundException;
+use FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException;
+use FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException;
 use FlixTech\SchemaRegistryApi\Registry;
 use GuzzleHttp\Promise\PromiseInterface;
 use const FlixTech\AvroSerializer\Common\get;
@@ -60,6 +62,11 @@ class RecordSerializer
     private $registerMissingSchemas;
 
     /**
+     * @var bool
+     */
+    private $registerNonExistingSubjects;
+
+    /**
      * @var callable
      */
     private $protocolValidatorFunc;
@@ -81,6 +88,10 @@ class RecordSerializer
 
         $this->registerMissingSchemas = isset($options['register_missing_schemas'])
             ? (bool) $options['register_missing_schemas']
+            : false;
+
+        $this->registerNonExistingSubjects = isset($options['register_missing_subjects'])
+            ? (bool) $options['register_missing_subjects']
             : false;
     }
 
@@ -118,10 +129,10 @@ class RecordSerializer
     {
         try {
             $schemaId = $this->extractValueFromRegistryResponse($this->registry->schemaId($subject, $schema));
-        } catch (SchemaNotFoundException $e) {
-            if (!$this->registerMissingSchemas) {
-                throw $e;
-            }
+        } catch (SchemaRegistryException $e) {
+
+            $this->handleSubjectOrSchemaNotFound($e);
+
             $schemaId = $this->extractValueFromRegistryResponse($this->registry->register($subject, $schema));
         }
 
@@ -132,12 +143,32 @@ class RecordSerializer
     {
         if ($response instanceof PromiseInterface) {
             $response = $response->wait();
+        }
 
-            if ($response instanceof \Exception) {
-                throw $response;
-            }
+        if ($response instanceof \Exception) {
+            throw $response;
         }
 
         return $response;
+    }
+
+    private function handleSubjectOrSchemaNotFound(SchemaRegistryException $e)
+    {
+        switch (get_class($e)) {
+            case SchemaNotFoundException::class:
+                if (!$this->registerMissingSchemas) {
+                    throw $e;
+                }
+
+                break;
+            case SubjectNotFoundException::class:
+                if (!$this->registerNonExistingSubjects) {
+                    throw $e;
+                }
+
+                break;
+            default:
+                throw $e;
+        }
     }
 }
