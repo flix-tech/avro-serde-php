@@ -8,16 +8,8 @@ use FlixTech\AvroSerializer\Objects\Exceptions\Exceptions;
 use Widmogrod\Monad\Either\Either;
 use Widmogrod\Monad\Either\Left;
 use Widmogrod\Monad\Either\Right;
-use Widmogrod\Monad\IO;
 use Widmogrod\Monad\Maybe\Maybe;
-use Widmogrod\Primitive\Num;
-use Widmogrod\Primitive\Stringg;
 use function Widmogrod\Functional\curryN;
-use function Widmogrod\Functional\valueOf;
-use function Widmogrod\Monad\Control\doo;
-use function Widmogrod\Monad\Control\runWith;
-use function Widmogrod\Monad\IO\getLine;
-use function Widmogrod\Monad\IO\putStrLn;
 use function Widmogrod\Monad\Maybe\just;
 use function Widmogrod\Monad\Maybe\nothing;
 
@@ -112,30 +104,4 @@ const validator = '\FlixTech\AvroSerializer\Protocol\validator';
 function validator(int $protocolVersion)
 {
     return curryN(2, validate)($protocolVersion);
-}
-
-
-const encodeIO = '\FlixTech\AvroSerializer\Protocol\encodeIO';
-
-function encodeIO(): IO
-{
-    return doo([
-        putStrLn('Please provide the schema ID to be encoded:'),
-        '$schemaId'
-            => getLine()
-                ->bind('\intval')
-                ->bind(Num::of)
-        ,
-        putStrLn('Please provide the string to be encoded:'),
-        '$binary'
-            => getLine()
-                ->bind(Stringg::of)
-        ,
-        runWith(
-            function ($schemaId, $binary) {
-                return putStrLn(valueOf(encoder(WIRE_FORMAT_PROTOCOL_VERSION)($schemaId)($binary)));
-            },
-            ['$schemaId', '$binary']
-        )
-    ]);
 }
