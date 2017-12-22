@@ -1,0 +1,6 @@
+# Only 7.1 and 7.2 are actively supported
+PHP_VERSION=7.1
+# For 7.2 the version is 2.6.0alpha1
+XDEBUG_VERSION=2.5.5
+# Only 4.0.0 and 3.3.0 are currently supported
+CONFLUENT_VERSION=4.0.0

@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+set -e
+
+command -v docker >/dev/null 2>&1 || { echo "docker is required to run this binary. Aborting." >&2; exit 1; }
+
+USER=${USER:-$( id -un )}
+GROUP=${GROUP:-$( id -gn )}
+COMPOSER_HOME=${COMPOSER_HOME:-${HOME}/.composer}
+PHP_VERSION=${PHP_VERSION:-7.1}
+
+exec docker run -it --rm \
+    -u $( id -u ${USER} ):$( id -g ${USER} ) \
+    -v "${PWD}":"${PWD}" \
+    -v "${COMPOSER_HOME}":/tmp/composer \
+    -w ${PWD} \
+    -e PHP_IDE_CONFIG="serverName=avro-serializer" \
+    -e COMPOSER_HOME="/tmp/composer" \
+    --net=host --sig-proxy=true --pid=host \
+    --entrypoint="php" \
+     avro-serializer-php:${PHP_VERSION} "${@}"

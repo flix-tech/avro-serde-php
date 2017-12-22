@@ -28,22 +28,22 @@ class FileResolver implements SchemaResolverInterface
 
     public function valueSchemaFor($record): AvroSchema
     {
-        $inflectedFileName = call_user_func($this->inflector, $record, false);
+        $inflectedFileName = \call_user_func($this->inflector, $record, false);
         Assert::that($inflectedFileName)->string()->notEmpty();
 
         $filePath = $this->getFilePath($inflectedFileName);
 
         Assert::that($filePath)->file();
 
-        return AvroSchema::parse(file_get_contents($filePath));
+        return AvroSchema::parse(\file_get_contents($filePath));
     }
 
     public function keySchemaFor($record)
     {
-        $inflectedFileName = call_user_func($this->inflector, $record, true);
+        $inflectedFileName = \call_user_func($this->inflector, $record, true);
         Assert::that($inflectedFileName)->string()->notEmpty();
 
-        $fileContents = @file_get_contents($this->getFilePath($inflectedFileName));
+        $fileContents = @\file_get_contents($this->getFilePath($inflectedFileName));
 
         if (false === $fileContents) {
             return null;
@@ -54,7 +54,7 @@ class FileResolver implements SchemaResolverInterface
 
     private function getFilePath(string $inflectedFileName): string
     {
-        $filePath = sprintf('%s/%s',
+        $filePath = \sprintf('%s/%s',
             $this->baseDir,
             $inflectedFileName
         );

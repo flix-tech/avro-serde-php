@@ -3,18 +3,23 @@
 declare(strict_types=1);
 
 $finder = PhpCsFixer\Finder::create()
-    ->in('src')
-    ->in('test');
+    ->in(['src', 'test'])
+;
 
 return PhpCsFixer\Config::create()
-    ->setRules(
-        [
-            'no_unused_imports' => true,
-            'ordered_imports' => true,
-            'phpdoc_summary' => false,
-            'phpdoc_to_comment' => false,
-            'concat_space' => ['spacing' => 'one'],
-            'array_syntax' => ['syntax' => 'short'],
-        ]
-    )
-    ->setFinder($finder) ;
+    ->setRules([
+        '@Symfony' => true,
+        'ordered_imports' => true,
+        'phpdoc_summary' => false,
+        'phpdoc_to_comment' => false,
+        'yoda_style' => true,
+        'concat_space' => ['spacing' => 'one'],
+        'array_syntax' => ['syntax' => 'short'],
+        'list_syntax' => ['syntax' => 'short'],
+        'no_null_property_initialization' => true,
+        'native_function_invocation' => true,
+        'ordered_class_elements' => true,
+    ])
+    ->setFinder($finder)
+    ->setCacheFile('.php_cs.' . (string) getenv('PHP_VERSION') . '.cache')
+    ->setUsingCache(true);

@@ -95,6 +95,16 @@ class RecordSerializer
             : false;
     }
 
+    /**
+     * @param string      $subject
+     * @param \AvroSchema $schema
+     * @param             $record
+     *
+     * @return string
+     *
+     * @throws \Exception
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
     public function encodeRecord(string $subject, AvroSchema $schema, $record): string
     {
         $schemaId = $this->getSchemaIdForSchema($subject, $schema);
@@ -105,6 +115,16 @@ class RecordSerializer
             ->either(reThrow, identity);
     }
 
+    /**
+     * @param string           $binaryMessage
+     * @param \AvroSchema|null $readersSchema
+     *
+     * @return mixed
+     *
+     * @throws \InvalidArgumentException
+     * @throws \Exception
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
     public function decodeMessage(string $binaryMessage, AvroSchema $readersSchema = null)
     {
         $decoded = decode($binaryMessage);
@@ -125,12 +145,20 @@ class RecordSerializer
             ->either(reThrow, identity);
     }
 
+    /**
+     * @param string      $subject
+     * @param \AvroSchema $schema
+     *
+     * @return int
+     *
+     * @throws \Exception
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
     private function getSchemaIdForSchema(string $subject, AvroSchema $schema): int
     {
         try {
             $schemaId = $this->extractValueFromRegistryResponse($this->registry->schemaId($subject, $schema));
         } catch (SchemaRegistryException $e) {
-
             $this->handleSubjectOrSchemaNotFound($e);
 
             $schemaId = $this->extractValueFromRegistryResponse($this->registry->register($subject, $schema));
@@ -139,6 +167,13 @@ class RecordSerializer
         return $schemaId;
     }
 
+    /**
+     * @param $response
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
     private function extractValueFromRegistryResponse($response)
     {
         if ($response instanceof PromiseInterface) {
@@ -152,9 +187,14 @@ class RecordSerializer
         return $response;
     }
 
-    private function handleSubjectOrSchemaNotFound(SchemaRegistryException $e)
+    /**
+     * @param \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException $e
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
+    private function handleSubjectOrSchemaNotFound(SchemaRegistryException $e): void
     {
-        switch (get_class($e)) {
+        switch (\get_class($e)) {
             case SchemaNotFoundException::class:
                 if (!$this->registerMissingSchemas) {
                     throw $e;

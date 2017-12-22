@@ -15,14 +15,12 @@ use Widmogrod\Monad\Either\Right;
 use function Widmogrod\Functional\curryN;
 use function Widmogrod\Functional\tryCatch;
 
-
 const avroStringIo = '\FlixTech\AvroSerializer\Serialize\avroStringIo';
 
 function avroStringIo(string $contents): AvroStringIO
 {
     return new AvroStringIO($contents);
 }
-
 
 const avroBinaryEncoder = '\FlixTech\AvroSerializer\Serialize\avroBinaryEncoder';
 
@@ -31,7 +29,6 @@ function avroBinaryEncoder(AvroStringIO $io): AvroIOBinaryEncoder
     return new AvroIOBinaryEncoder($io);
 }
 
-
 const avroBinaryDecoder = '\FlixTech\AvroSerializer\Serialize\avroBinaryDecoder';
 
 function avroBinaryDecoder(AvroStringIO $io): AvroIOBinaryDecoder
@@ -39,17 +36,15 @@ function avroBinaryDecoder(AvroStringIO $io): AvroIOBinaryDecoder
     return new AvroIOBinaryDecoder($io);
 }
 
-
 const avroDatumWriter = '\FlixTech\AvroSerializer\Serialize\avroDatumWriter';
 
 function avroDatumWriter(): callable
 {
-    $writer  = new AvroIODatumWriter();
+    $writer = new AvroIODatumWriter();
     $io = avroStringIo('');
 
     return curryN(4, writeDatum)($writer)($io);
 }
-
 
 const writeDatum = '\FlixTech\AvroSerializer\Serialize\writeDatum';
 
@@ -71,7 +66,6 @@ function writeDatum(AvroIODatumWriter $writer, AvroStringIO $io, AvroSchema $sch
     );
 }
 
-
 const avroDatumReader = '\FlixTech\AvroSerializer\Serialize\avroDatumReader';
 
 function avroDatumReader(): callable
@@ -81,7 +75,6 @@ function avroDatumReader(): callable
 
     return curryN(5, readDatum)($reader)($io);
 }
-
 
 const readDatum = '\FlixTech\AvroSerializer\Serialize\readDatum';
 

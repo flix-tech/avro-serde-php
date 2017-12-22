@@ -95,6 +95,12 @@ class FileResolverTest extends TestCase
     }
 }
 
-class TestRecordOne {}
-class TestRecordTwo {}
-class TestRecordThree {}
+class TestRecordOne
+{
+}
+class TestRecordTwo
+{
+}
+class TestRecordThree
+{
+}
