@@ -32,6 +32,12 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
         $this->recordSerializer = new RecordSerializer($this->registryMock);
     }
 
+    protected function tearDown()
+    {
+        // Clear memoization between tests
+        memoize();
+    }
+
     /**
      * @test
      */
@@ -51,13 +57,13 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
         $this->assertSame(
             self::HEX_BIN,
-            bin2hex($this->recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+            \bin2hex($this->recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
         );
 
         // Second call to ensure memoized functions work as expected
         $this->assertSame(
             self::HEX_BIN,
-            bin2hex($this->recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+            \bin2hex($this->recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
         );
     }
 
@@ -125,13 +131,13 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
         $this->assertSame(
             self::HEX_BIN,
-            bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+            \bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
         );
 
         // Second call to ensure memoized functions work as expected
         $this->assertSame(
             self::HEX_BIN,
-            bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+            \bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
         );
     }
 
@@ -182,13 +188,13 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
         $this->assertSame(
             self::HEX_BIN,
-            bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+            \bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
         );
 
         // Second call to ensure memoized functions work as expected
         $this->assertSame(
             self::HEX_BIN,
-            bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
+            \bin2hex($recordSerializer->encodeRecord('test', $this->avroSchema, self::TEST_RECORD))
         );
     }
 
@@ -231,13 +237,13 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
         $this->assertSame(
             self::TEST_RECORD,
-            $this->recordSerializer->decodeMessage(hex2bin(self::HEX_BIN))
+            $this->recordSerializer->decodeMessage(\hex2bin(self::HEX_BIN))
         );
 
         // Second call to ensure memoized functions work as expected
         $this->assertSame(
             self::TEST_RECORD,
-            $this->recordSerializer->decodeMessage(hex2bin(self::HEX_BIN))
+            $this->recordSerializer->decodeMessage(\hex2bin(self::HEX_BIN))
         );
     }
 
@@ -260,19 +266,13 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
         $this->assertSame(
             self::READERS_TEST_RECORD,
-            $this->recordSerializer->decodeMessage(hex2bin(self::HEX_BIN), $this->readersSchema)
+            $this->recordSerializer->decodeMessage(\hex2bin(self::HEX_BIN), $this->readersSchema)
         );
 
         // Second call to ensure memoized functions work as expected
         $this->assertSame(
             self::READERS_TEST_RECORD,
-            $this->recordSerializer->decodeMessage(hex2bin(self::HEX_BIN), $this->readersSchema)
+            $this->recordSerializer->decodeMessage(\hex2bin(self::HEX_BIN), $this->readersSchema)
         );
-    }
-
-    protected function tearDown()
-    {
-        // Clear memoization between tests
-        memoize();
     }
 }

@@ -15,7 +15,7 @@ class CallableResolver implements SchemaResolverInterface
     private $valueSchemaResolverCallable;
 
     /**
-     * @var callable
+     * @var callable|null
      */
     private $keySchemaResolverCallable;
 
@@ -25,18 +25,17 @@ class CallableResolver implements SchemaResolverInterface
         $this->keySchemaResolverCallable = $keySchemaResolverCallable;
     }
 
-
     public function valueSchemaFor($record): AvroSchema
     {
-        return AvroSchema::parse(call_user_func($this->valueSchemaResolverCallable, $record));
+        return AvroSchema::parse(\call_user_func($this->valueSchemaResolverCallable, $record));
     }
 
-    public function keySchemaFor($record)
+    public function keySchemaFor($record): ?AvroSchema
     {
         if (!$this->keySchemaResolverCallable) {
             return null;
         }
 
-        return AvroSchema::parse(call_user_func($this->keySchemaResolverCallable, $record));
+        return AvroSchema::parse(\call_user_func($this->keySchemaResolverCallable, $record));
     }
 }

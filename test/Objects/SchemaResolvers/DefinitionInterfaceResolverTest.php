@@ -67,8 +67,7 @@ class DefinitionInterfaceResolverTest extends TestCase
 
     private function createAnonymousDefinitionInterface(string $valueSchema, string $keySchema = null): HasSchemaDefinitionInterface
     {
-        $class = new class implements HasSchemaDefinitionInterface
-        {
+        $class = new class() implements HasSchemaDefinitionInterface {
             /**
              * @var string
              */

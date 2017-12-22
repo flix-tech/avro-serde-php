@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test;
 
-
 use Widmogrod\Monad\Maybe\Just;
 use Widmogrod\Monad\Maybe\Nothing;
 use const FlixTech\AvroSerializer\Common\get;
@@ -25,7 +24,7 @@ class CommonTest extends AbstractFunctionalTestCase
         $array = [
             PROTOCOL_ACCESSOR_VERSION => 0,
             PROTOCOL_ACCESSOR_SCHEMA_ID => self::SCHEMA_ID,
-            PROTOCOL_ACCESSOR_AVRO => hex2bin(self::HEX_BIN),
+            PROTOCOL_ACCESSOR_AVRO => \hex2bin(self::HEX_BIN),
         ];
 
         $maybe = get(PROTOCOL_ACCESSOR_SCHEMA_ID, $array);

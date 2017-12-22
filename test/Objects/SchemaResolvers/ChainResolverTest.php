@@ -44,7 +44,6 @@ class ChainResolverTest extends TestCase
             ->with($record)
             ->willReturn($avroSchema);
 
-
         $this->chainTwo->expects($this->never())
             ->method('valueSchemaFor');
 
@@ -66,7 +65,6 @@ class ChainResolverTest extends TestCase
             ->with($record)
             ->willReturn($avroSchema);
 
-
         $this->chainTwo->expects($this->never())
             ->method('keySchemaFor');
 
@@ -87,7 +85,6 @@ class ChainResolverTest extends TestCase
             ->method('valueSchemaFor')
             ->with($record)
             ->willThrowException(new \InvalidArgumentException('I am not thrown #1'));
-
 
         $this->chainTwo->expects($this->once())
             ->method('valueSchemaFor')
@@ -111,7 +108,6 @@ class ChainResolverTest extends TestCase
             ->method('keySchemaFor')
             ->with($record)
             ->willThrowException(new \InvalidArgumentException('I am not thrown #1'));
-
 
         $this->chainTwo->expects($this->once())
             ->method('keySchemaFor')

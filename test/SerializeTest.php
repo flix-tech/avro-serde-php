@@ -64,7 +64,7 @@ class SerializeTest extends AbstractFunctionalTestCase
      */
     public function avroDatumWriter_should_create_curried_function()
     {
-        $writer  = new AvroIODatumWriter();
+        $writer = new AvroIODatumWriter();
         $io = avroStringIo('');
 
         $this->assertEquals(
@@ -78,18 +78,18 @@ class SerializeTest extends AbstractFunctionalTestCase
      */
     public function writeDatum_should_correctly_produce_avro_encoded_binary_string_Right_Monad()
     {
-        $writer  = new AvroIODatumWriter();
+        $writer = new AvroIODatumWriter();
         $io = avroStringIo('');
 
         $firstCall = writeDatum($writer, $io, $this->avroSchema, self::TEST_RECORD);
 
         $this->assertInstanceOf(Right::class, $firstCall);
-        $this->assertSame(self::AVRO_ENCODED_RECORD_HEX_BIN, bin2hex($firstCall->extract()));
+        $this->assertSame(self::AVRO_ENCODED_RECORD_HEX_BIN, \bin2hex($firstCall->extract()));
 
         $secondCall = writeDatum($writer, $io, $this->avroSchema, self::TEST_RECORD);
 
         $this->assertInstanceOf(Right::class, $secondCall);
-        $this->assertSame(self::AVRO_ENCODED_RECORD_HEX_BIN, bin2hex($secondCall->extract()));
+        $this->assertSame(self::AVRO_ENCODED_RECORD_HEX_BIN, \bin2hex($secondCall->extract()));
 
         $this->assertEquals($firstCall, $secondCall);
         $this->assertNotSame($firstCall, $secondCall);
@@ -100,7 +100,7 @@ class SerializeTest extends AbstractFunctionalTestCase
      */
     public function writeDatum_should_produce_Left_Monad_for_invalid_inputs()
     {
-        $writer  = new AvroIODatumWriter();
+        $writer = new AvroIODatumWriter();
         $io = avroStringIo('');
 
         $left = writeDatum($writer, $io, $this->avroSchema, self::INVALID_TEST_RECORD);
@@ -114,7 +114,7 @@ class SerializeTest extends AbstractFunctionalTestCase
      */
     public function avroDatumReader_should_return_curried_function()
     {
-        $writer  = new \AvroIODatumReader();
+        $writer = new \AvroIODatumReader();
         $io = avroStringIo('');
 
         $this->assertEquals(
@@ -128,9 +128,9 @@ class SerializeTest extends AbstractFunctionalTestCase
      */
     public function readDatum_should_return_Right_Monad_for_valid_inputs()
     {
-        $reader  = new \AvroIODatumReader();
+        $reader = new \AvroIODatumReader();
         $io = avroStringIo('');
-        $data = hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN);
+        $data = \hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN);
 
         $firstCall = readDatum($reader, $io, $this->avroSchema, $this->avroSchema, $data);
 
@@ -153,9 +153,9 @@ class SerializeTest extends AbstractFunctionalTestCase
      */
     public function readDatum_should_turn_Left_Monad_for_invalid_reader_and_writer_schemas()
     {
-        $reader  = new \AvroIODatumReader();
+        $reader = new \AvroIODatumReader();
         $io = avroStringIo('');
-        $data = hex2bin(self::INVALID_AVRO_ENCODED_RECORD_HEX_BIN);
+        $data = \hex2bin(self::INVALID_AVRO_ENCODED_RECORD_HEX_BIN);
 
         $firstCall = readDatum($reader, $io, $this->avroSchema, $this->invalidSchema, $data);
 

@@ -30,7 +30,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
         $encoded = encode(WIRE_FORMAT_PROTOCOL_VERSION, self::SCHEMA_ID, self::HEX_BIN);
 
         $this->assertInstanceOf(Right::class, $encoded);
-        $this->assertSame(self::VALID_PROTOCOL_HEX_BIN, bin2hex($encoded->extract()));
+        $this->assertSame(self::VALID_PROTOCOL_HEX_BIN, \bin2hex($encoded->extract()));
     }
 
     /**
@@ -51,7 +51,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
      */
     public function protocol_decoder_should_decode_correctly()
     {
-        $binaryInput = hex2bin(self::HEX_BIN);
+        $binaryInput = \hex2bin(self::HEX_BIN);
         $decoded = decode($binaryInput);
 
         $this->assertInstanceOf(Right::class, $decoded);
@@ -61,7 +61,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
         $this->assertInternalType('array', $unpacked);
         $this->assertSame(WIRE_FORMAT_PROTOCOL_VERSION, $unpacked[PROTOCOL_ACCESSOR_VERSION]);
         $this->assertSame(self::SCHEMA_ID, $unpacked[PROTOCOL_ACCESSOR_SCHEMA_ID]);
-        $this->assertSame(self::AVRO_ENCODED_RECORD_HEX_BIN, bin2hex($unpacked[PROTOCOL_ACCESSOR_AVRO]));
+        $this->assertSame(self::AVRO_ENCODED_RECORD_HEX_BIN, \bin2hex($unpacked[PROTOCOL_ACCESSOR_AVRO]));
     }
 
     /**
@@ -69,7 +69,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
      */
     public function protocol_decoder_should_turn_Left_with_Exception_for_invalid_inputs()
     {
-        $binaryInput = hex2bin(self::INVALID_BIN_TOO_SHORT);
+        $binaryInput = \hex2bin(self::INVALID_BIN_TOO_SHORT);
         $decoded = decode($binaryInput);
 
         $this->assertInstanceOf(Left::class, $decoded);
@@ -95,7 +95,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
         $decoded = [
             PROTOCOL_ACCESSOR_VERSION => WIRE_FORMAT_PROTOCOL_VERSION,
             PROTOCOL_ACCESSOR_SCHEMA_ID => self::SCHEMA_ID,
-            PROTOCOL_ACCESSOR_AVRO => hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN),
+            PROTOCOL_ACCESSOR_AVRO => \hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN),
         ];
 
         $just = validate(WIRE_FORMAT_PROTOCOL_VERSION, $decoded);
@@ -112,7 +112,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
         $decoded = [
             PROTOCOL_ACCESSOR_VERSION => 1,
             PROTOCOL_ACCESSOR_SCHEMA_ID => self::SCHEMA_ID,
-            PROTOCOL_ACCESSOR_AVRO => hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN),
+            PROTOCOL_ACCESSOR_AVRO => \hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN),
         ];
 
         $this->assertInstanceOf(Nothing::class, validate(WIRE_FORMAT_PROTOCOL_VERSION, $decoded));
@@ -127,7 +127,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
         $decoded = [
             PROTOCOL_ACCESSOR_VERSION => WIRE_FORMAT_PROTOCOL_VERSION,
             PROTOCOL_ACCESSOR_SCHEMA_ID => 'INVALID',
-            PROTOCOL_ACCESSOR_AVRO => hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN),
+            PROTOCOL_ACCESSOR_AVRO => \hex2bin(self::AVRO_ENCODED_RECORD_HEX_BIN),
         ];
 
         $this->assertInstanceOf(Nothing::class, validate(WIRE_FORMAT_PROTOCOL_VERSION, $decoded));

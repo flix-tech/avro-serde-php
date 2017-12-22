@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FlixTech\AvroSerializer\Benchmarks;
 
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
+use FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException;
 use FlixTech\SchemaRegistryApi\Registry\Cache\AvroObjectCacheAdapter;
 use FlixTech\SchemaRegistryApi\Registry\CachedRegistry;
 use FlixTech\SchemaRegistryApi\Registry\PromisingRegistry;
@@ -18,12 +19,12 @@ use PhpBench\Benchmark\Metadata\Annotations\Revs;
  */
 class AvroEncodingBench
 {
-    const TEST_RECORD = [
+    public const TEST_RECORD = [
         'name' => 'Thomas',
         'age' => 36,
     ];
 
-    const SCHEMA_JSON = /** @lang JSON */
+    public const SCHEMA_JSON = /** @lang JSON */
         <<<JSON
 {
   "type": "record",
@@ -55,7 +56,7 @@ JSON;
      */
     private $binaryMessage;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry = new CachedRegistry(
             new PromisingRegistry(
@@ -68,14 +69,21 @@ JSON;
         $this->registry->register('test', $this->schema)->wait();
 
         $this->serializer = new RecordSerializer($this->registry);
-        $this->binaryMessage = $this->serializer->encodeRecord('test', $this->schema, self::TEST_RECORD);
+        try {
+            $this->binaryMessage = $this->serializer->encodeRecord('test', $this->schema, self::TEST_RECORD);
+        } catch (\Exception $e) {
+        } catch (SchemaRegistryException $e) {
+        }
     }
 
     /**
      * @Revs(1000)
      * @Iterations(5)
+     *
+     * @throws \Exception
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
-    public function benchEncode()
+    public function benchEncode(): void
     {
         $this->serializer->encodeRecord('test', $this->schema, self::TEST_RECORD);
     }
@@ -83,8 +91,11 @@ JSON;
     /**
      * @Revs(1000)
      * @Iterations(5)
+     *
+     * @throws \Exception
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
-    public function benchDecode()
+    public function benchDecode(): void
     {
         $this->serializer->decodeMessage($this->binaryMessage);
     }

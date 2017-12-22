@@ -6,12 +6,12 @@ namespace FlixTech\AvroSerializer\Objects\Exceptions;
 
 final class Exceptions
 {
-    const ERROR_ENCODING = 501;
-    const ERROR_DECODING = 502;
+    public const ERROR_ENCODING = 501;
+    public const ERROR_DECODING = 502;
 
     public static function forEncode($record, \AvroSchema $schema, \Exception $previous = null): AvroEncodingException
     {
-        $exportedRecord = var_export($record, true);
+        $exportedRecord = \var_export($record, true);
 
         $message = <<<MESSAGE
 Could not encode record with given Schema.
@@ -28,7 +28,7 @@ MESSAGE;
 
     public static function forDecode(string $binaryMessage, \Exception $previous = null): AvroDecodingException
     {
-        $convertedMessage = bin2hex($binaryMessage);
+        $convertedMessage = \bin2hex($binaryMessage);
         $message = <<<MESSAGE
 Could not decode message.
 
