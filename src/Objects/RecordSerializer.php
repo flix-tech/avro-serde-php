@@ -10,6 +10,12 @@ use FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException;
 use FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException;
 use FlixTech\SchemaRegistryApi\Registry;
 use GuzzleHttp\Promise\PromiseInterface;
+use const FlixTech\AvroSerializer\Common\get;
+use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_AVRO;
+use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_SCHEMA_ID;
+use const FlixTech\AvroSerializer\Protocol\WIRE_FORMAT_PROTOCOL_VERSION;
+use const Widmogrod\Functional\identity;
+use const Widmogrod\Functional\reThrow;
 use function FlixTech\AvroSerializer\Common\memoize;
 use function FlixTech\AvroSerializer\Protocol\decode;
 use function FlixTech\AvroSerializer\Protocol\encoder;
@@ -17,12 +23,6 @@ use function FlixTech\AvroSerializer\Protocol\validator;
 use function FlixTech\AvroSerializer\Serialize\avroDatumReader;
 use function FlixTech\AvroSerializer\Serialize\avroDatumWriter;
 use function Widmogrod\Functional\curryN;
-use const FlixTech\AvroSerializer\Common\get;
-use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_AVRO;
-use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_SCHEMA_ID;
-use const FlixTech\AvroSerializer\Protocol\WIRE_FORMAT_PROTOCOL_VERSION;
-use const Widmogrod\Functional\identity;
-use const Widmogrod\Functional\reThrow;
 
 class RecordSerializer
 {
