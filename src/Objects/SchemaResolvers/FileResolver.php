@@ -33,9 +33,9 @@ class FileResolver implements SchemaResolverInterface
 
         $filePath = $this->getFilePath($inflectedFileName);
 
-        Assert::that($filePath)->file();
+        Assert::that($filePath)->string()->file();
 
-        return AvroSchema::parse(\file_get_contents($filePath));
+        return AvroSchema::parse((string) @\file_get_contents($filePath));
     }
 
     public function keySchemaFor($record)
