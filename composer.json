@@ -10,15 +10,10 @@
       "email": "thomas.ploch@flixbus.com"
     }
   ],
-  "repositories": [
-    {
-      "type": "git",
-      "url": "git@github.com:flix-tech/avro-php.git"
-    }
-  ],
   "require": {
     "php": "^7.1",
     "beberlei/assert": "~2.7",
+    "flix-tech/avro-php": "^2.0",
     "flix-tech/confluent-schema-registry-api": "^5.0",
     "widmogrod/php-functional": "^4.0"
   },
