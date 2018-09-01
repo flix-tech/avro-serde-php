@@ -39,5 +39,11 @@
       "FlixTech\\AvroSerializer\\Test\\": "test/",
       "FlixTech\\AvroSerializer\\Benchmarks\\": "benchmarks/"
     }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.0.x-dev",
+      "1.x-dev": "1.0.x-dev"
+    }
   }
 }
