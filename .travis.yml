@@ -8,6 +8,7 @@ services:
 php:
 - '7.1'
 - '7.2'
+- '7.3'
 - nightly
 
 env:
@@ -20,6 +21,7 @@ env:
 matrix:
   allow_failures:
   - php: nightly
+  - php: '7.3'
 
 before_script:
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo rm /usr/local/bin/docker-compose; fi;
