@@ -2,10 +2,9 @@
 
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/7.0/phpunit.xsd"
         bootstrap="test/bootstrap.php"
         colors="true"
-        beStrictAboutTestSize="true"
         beStrictAboutTestsThatDoNotTestAnything="true"
         backupGlobals="false"
 >

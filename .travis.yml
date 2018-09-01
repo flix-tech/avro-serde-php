@@ -1,0 +1,44 @@
+dist: trusty
+sudo: required
+language: php
+
+services:
+- docker
+
+php:
+- '7.1'
+- '7.2'
+- '7.3'
+- nightly
+
+env:
+  global:
+  - DOCKER_COMPOSE_VERSION=1.22.0
+  matrix:
+  - DEPENDENCIES="low"
+  - DEPENDENCIES="stable"
+
+matrix:
+  allow_failures:
+  - php: nightly
+  - php: '7.3'
+
+before_script:
+- if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo rm /usr/local/bin/docker-compose; fi;
+- if [ "$INTEGRATION_TEST" == "enabled" ]; then curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose; fi;
+- if [ "$INTEGRATION_TEST" == "enabled" ]; then chmod +x docker-compose; fi;
+- if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo mv docker-compose /usr/local/bin; fi;
+- composer self-update
+- if [ "$DEPENDENCIES" == "stable" ]; then composer update --prefer-stable; fi;
+- if [ "$DEPENDENCIES" == "low" ]; then composer update --prefer-lowest --prefer-stable; fi;
+
+script:
+- COMPOSER=composer PHP=php make ci-local
+
+after_script:
+- make clean
+
+branches:
+  only:
+  - master
+  - '/^v\d+\.\d+(\.\d+)?(-\S*)?$/'
