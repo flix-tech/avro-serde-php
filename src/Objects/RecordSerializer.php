@@ -26,6 +26,9 @@ use const Widmogrod\Functional\reThrow;
 
 class RecordSerializer
 {
+    public const OPTION_REGISTER_MISSING_SCHEMAS = 'register_missing_schemas';
+    public const OPTION_REGISTER_MISSING_SUBJECTS = 'register_missing_subjects';
+
     /**
      * @var Registry
      */
@@ -86,12 +89,12 @@ class RecordSerializer
         $this->schemaIdGetter = $get(PROTOCOL_ACCESSOR_SCHEMA_ID);
         $this->avroBinaryGetter = $get(PROTOCOL_ACCESSOR_AVRO);
 
-        $this->registerMissingSchemas = isset($options['register_missing_schemas'])
-            ? (bool) $options['register_missing_schemas']
+        $this->registerMissingSchemas = isset($options[self::OPTION_REGISTER_MISSING_SCHEMAS])
+            ? (bool) $options[self::OPTION_REGISTER_MISSING_SCHEMAS]
             : false;
 
-        $this->registerNonExistingSubjects = isset($options['register_missing_subjects'])
-            ? (bool) $options['register_missing_subjects']
+        $this->registerNonExistingSubjects = isset($options[self::OPTION_REGISTER_MISSING_SUBJECTS])
+            ? (bool) $options[self::OPTION_REGISTER_MISSING_SUBJECTS]
             : false;
     }
 
