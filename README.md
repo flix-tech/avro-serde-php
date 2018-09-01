@@ -1,5 +1,10 @@
 # Avro SerDe for PHP 7.1+
 
+[![Build Status](https://travis-ci.org/flix-tech/avro-serde-php.svg?branch=master)](https://travis-ci.org/flix-tech/avro-serde-php)
+[![Latest Stable Version](https://poser.pugx.org/flix-tech/avro-serde-php/v/stable)](https://packagist.org/packages/flix-tech/confluent-schema-registry-api)
+[![Total Downloads](https://poser.pugx.org/flix-tech/avro-serde-php/downloads)](https://packagist.org/packages/flix-tech/confluent-schema-registry-api)
+[![License](https://poser.pugx.org/flix-tech/avro-serde-php/license)](https://packagist.org/packages/flix-tech/confluent-schema-registry-api)
+
 ## Motivation
 
 When serializing and deserializing messages using the [Avro](http://avro.apache.org/docs/current/) serialization format,
@@ -83,6 +88,8 @@ $encodedBinaryAvro = $recordSerializer->encodeRecord($subject, $avroSchema, $rec
 ```
 
 ### 4. Decoding messages
+
+This is a simple example on how you can use the `RecordSerializer` to decode messages.
 
 ```php
 <?php
