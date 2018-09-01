@@ -2,13 +2,13 @@ ARG PHP_VERSION=7.1
 
 FROM php:${PHP_VERSION}-cli-alpine
 
-ARG XDEBUG_VERSION=2.5.5
+ARG XDEBUG_VERSION=2.6.1
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS zlib-dev \
     && apk add --no-cache --virtual .runtime-deps git \
     && docker-php-ext-install zip \
-    && pecl install xdebug-$XDEBUG_VERSION ds \
-    && docker-php-ext-enable xdebug ds \
+    && pecl install xdebug-$XDEBUG_VERSION \
+    && docker-php-ext-enable xdebug \
     && echo "xdebug.max_nesting_level=15000" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
     && echo "xdebug.remote_enable=true" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
     && echo "xdebug.remote_host=localhost" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
