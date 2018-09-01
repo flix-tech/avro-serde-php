@@ -3,28 +3,44 @@ MAKEFLAGS =+ -rR --warn-undefined-variables
 
 .PHONY: composer-install composer-update phpstan cs-fixer examples docker run
 
--include variables.mk
-export
-
 ifndef CONFLUENT_VERSION
-    CONFLUENT_VERSION = 4.0.0
+    CONFLUENT_VERSION := latest
+endif
+
+ifndef CONFLUENT_NETWORK_SUBNET
+    CONFLUENT_NETWORK_SUBNET := 172.68.0.0/24
+endif
+
+ifndef SCHEMA_REGISTRY_IPV4
+    SCHEMA_REGISTRY_IPV4 := 172.68.0.103
+endif
+
+ifndef KAFKA_BROKER_IPV4
+    KAFKA_BROKER_IPV4 := 172.68.0.102
+endif
+
+ifndef ZOOKEEPER_IPV4
+    ZOOKEEPER_IPV4 := 172.68.0.101
 endif
 
 ifndef COMPOSER
-    COMPOSER = bin/composer.phar
+    COMPOSER := bin/composer.phar
 endif
 
 ifndef PHP
-    PHP = bin/php
+    PHP := bin/php
 endif
 
 ifndef PHP_VERSION
-    PHP_VERSION = 7.1
+    PHP_VERSION := 7.1
 endif
 
 ifndef XDEBUG_VERSION
-    XDEBUG_VERSION = 2.5.5
+    XDEBUG_VERSION := 2.6.1
 endif
+
+-include variables.mk
+export
 
 docker:
 	docker build \

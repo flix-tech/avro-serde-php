@@ -2,7 +2,7 @@
 version: '3'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper
+    image: confluentinc/cp-zookeeper:${CONFLUENT_VERSION}
     hostname: zookeeper
     ports:
       - "2181:2181"
@@ -11,10 +11,10 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     networks:
       avro-serializer-net:
-        ipv4_address: 172.68.0.101
+        ipv4_address: ${ZOOKEEPER_IPV4}
 
   broker:
-    image: confluentinc/cp-enterprise-kafka
+    image: confluentinc/cp-kafka:${CONFLUENT_VERSION}
     hostname: broker
     depends_on:
       - zookeeper
@@ -24,18 +24,12 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://172.68.0.102:9092'
-      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:9092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
-      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
-      CONFLUENT_METRICS_ENABLE: 'true'
-      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
     networks:
       avro-serializer-net:
-        ipv4_address: 172.68.0.102
+        ipv4_address: ${KAFKA_BROKER_IPV4}
 
   schema_registry:
-    image: confluentinc/cp-schema-registry
+    image: confluentinc/cp-schema-registry:${CONFLUENT_VERSION}
     hostname: schema_registry
     depends_on:
       - zookeeper
@@ -43,15 +37,15 @@ services:
     ports:
       - "8081:8081"
     environment:
-      SCHEMA_REGISTRY_HOST_NAME: 172.68.0.103
+      SCHEMA_REGISTRY_HOST_NAME: ${SCHEMA_REGISTRY_IPV4}
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
     networks:
       avro-serializer-net:
-        ipv4_address: 172.68.0.103
+        ipv4_address: ${SCHEMA_REGISTRY_IPV4}
 
 networks:
   avro-serializer-net:
     driver: bridge
     ipam:
       config:
-      - subnet: 172.68.0.0/24
+      - subnet: ${CONFLUENT_NETWORK_SUBNET}
