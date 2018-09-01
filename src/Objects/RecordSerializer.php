@@ -23,6 +23,7 @@ use function FlixTech\AvroSerializer\Protocol\validator;
 use function FlixTech\AvroSerializer\Serialize\avroDatumReader;
 use function FlixTech\AvroSerializer\Serialize\avroDatumWriter;
 use function Widmogrod\Functional\curryN;
+use function Widmogrod\Functional\valueOf;
 
 class RecordSerializer
 {
@@ -131,7 +132,7 @@ class RecordSerializer
     public function decodeMessage(string $binaryMessage, AvroSchema $readersSchema = null)
     {
         $decoded = decode($binaryMessage);
-        $schemaId = $decoded->bind($this->schemaIdGetter)->extract();
+        $schemaId = valueOf($decoded->bind($this->schemaIdGetter));
         $writersSchema = $this->extractValueFromRegistryResponse($this->registry->schemaForId($schemaId));
 
         if (null === $readersSchema) {
@@ -140,12 +141,16 @@ class RecordSerializer
 
         $cachedReader = memoize($this->datumReaderFactoryFunc, [$writersSchema], 'reader_' . $schemaId);
 
-        return $decoded
-            ->bind($this->protocolValidatorFunc)
+        /** @var \Widmogrod\Monad\Maybe\Maybe $validated */
+        $validated = $decoded->bind($this->protocolValidatorFunc);
+
+        /** @var \Widmogrod\Monad\Either\Either $read */
+        $read = $validated
             ->orElse(function () { throw new \InvalidArgumentException('Could not validate message wire protocol.'); })
             ->bind($this->avroBinaryGetter)
-            ->bind($cachedReader($readersSchema))
-            ->either(reThrow, identity);
+            ->bind($cachedReader($readersSchema));
+
+        return $read->either(reThrow, identity);
     }
 
     /**
