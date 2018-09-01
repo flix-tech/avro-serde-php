@@ -8,8 +8,9 @@ USER=${USER:-$( id -un )}
 GROUP=${GROUP:-$( id -gn )}
 COMPOSER_HOME=${COMPOSER_HOME:-${HOME}/.composer}
 PHP_VERSION=${PHP_VERSION:-7.1}
+DOCKER_OPTS=${DOCKER_OPTS:-'-it'}
 
-exec docker run -it --rm \
+exec docker run ${DOCKER_OPTS} --rm \
     -u $( id -u ${USER} ):$( id -g ${USER} ) \
     -v "${PWD}":"${PWD}" \
     -v "${COMPOSER_HOME}":/tmp/composer \
