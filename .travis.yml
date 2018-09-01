@@ -37,3 +37,8 @@ script:
 
 after_script:
 - make clean
+
+branches:
+  only:
+  - master
+  - '/^v\d+\.\d+(\.\d+)?(-\S*)?$/'
