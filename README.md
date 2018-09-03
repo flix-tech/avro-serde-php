@@ -256,6 +256,87 @@ $resolver->valueSchemaFor($record); // Will resolve $fileResolver, then $callabl
 $resolver->keySchemaFor($record); // Will resolve $fileResolver, then $callableResolver
 ```
 
+## Symfony Serializer Integration
+
+This library provides integrations with the [Symfony Serializer component](https://symfony.com/doc/master/components/serializer.html).
+
+```php
+<?php
+
+class User
+{
+    /** @var string */
+    private $name;
+
+    /** @var int */
+    private $age;
+
+    public function __construct(string $name, int $age)
+    {
+        $this->name = $name;
+        $this->age = $age;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getAge(): int
+    {
+        return $this->age;
+    }
+
+    public function setAge(int $age): void
+    {
+        $this->age = $age;
+    }
+}
+
+$recordSerializer = \FlixTech\AvroSerializer\Objects\DefaultRecordSerializerFactory::get(
+    getenv('SCHEMA_REGISTRY_HOST')
+);
+
+$avroSchemaJson = '{
+  "type": "record",
+  "name": "user",
+  "fields": [
+    {"name": "name", "type": "string"},
+    {"name": "age", "type": "int"}
+  ]
+}';
+
+$user = new User('Thomas', 38);
+
+$normalizer = new \Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer();
+$encoder = new \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder($recordSerializer);
+
+$symfonySerializer = new \Symfony\Component\Serializer\Serializer([$normalizer], [$encoder]);
+
+$serialized = $symfonySerializer->serialize(
+    $user,
+    \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::FORMAT_AVRO,
+    [
+        \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::CONTEXT_ENCODE_SUBJECT => 'users-value',
+        \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => \AvroSchema::parse($avroSchemaJson),
+    ]
+);
+
+$deserializedUser = $symfonySerializer->deserialize(
+    $serialized,
+    User::class,
+    \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::FORMAT_AVRO
+);
+
+\PHPUnit\Framework\Assert::assertEquals($deserializedUser, $user);
+
+```
+
 ## Examples
 
 This library provides a few executable examples in the [examples](examples) folder. You should hae a look to get an
