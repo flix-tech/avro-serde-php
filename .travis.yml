@@ -5,12 +5,23 @@ language: php
 services:
 - docker
 
+php:
+- '7.1'
+- '7.2'
+- '7.3'
+- nightly
+
 env:
   global:
   - DOCKER_COMPOSE_VERSION=1.22.0
   matrix:
   - DEPENDENCIES="low"
   - DEPENDENCIES="stable"
+
+matrix:
+  allow_failures:
+  - php: nightly
+  - php: '7.3'
 
 before_script:
 - make install-phars
@@ -22,20 +33,11 @@ before_script:
 - if [ "$DEPENDENCIES" == "stable" ]; then composer update --prefer-stable; fi;
 - if [ "$DEPENDENCIES" == "low" ]; then composer update --prefer-lowest --prefer-stable; fi;
 
+script:
+- COMPOSER=composer PHP=php make ci-local
+
 jobs:
   include:
-  - stage: test
-    php:
-    - '7.1'
-    - '7.2'
-    - nightly
-    env:
-    - DEPENDENCIES="low"
-    - DEPENDENCIES="stable"
-    script:
-    - COMPOSER=composer PHP=php make ci-local
-    allow_failures:
-    - php: nightly
   - stage: coverage
     php: 7.2
     env:
