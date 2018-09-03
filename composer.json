@@ -15,15 +15,15 @@
     "beberlei/assert": "~2.7",
     "flix-tech/avro-php": "^2.0",
     "flix-tech/confluent-schema-registry-api": "^5.0",
-    "widmogrod/php-functional": "^4.2|^5.0",
-    "symfony/serializer": "^2.8|^3.1|^4.0"
+    "widmogrod/php-functional": "^4.2|^5.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
     "phpstan/phpstan": "~0.8",
     "friendsofphp/php-cs-fixer": "~2.0",
     "phpbench/phpbench": "~0.9",
-    "vlucas/phpdotenv": "~2.4"
+    "vlucas/phpdotenv": "~2.4",
+    "symfony/serializer": "^2.8|^3.1|^4.0"
   },
   "autoload": {
     "psr-4": {
@@ -35,6 +35,9 @@
       "src/Serialize.php",
       "src/Common.php"
     ]
+  },
+  "suggest": {
+    "symfony/serializer": "To integrate avro-serde-php into symfony ecosystem"
   },
   "autoload-dev": {
     "psr-4": {
