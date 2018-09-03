@@ -11,7 +11,7 @@ class DefinitionInterfaceResolverTest extends TestCase
     /**
      * @test
      */
-    public function it_should_allow_correct_interfaces()
+    public function it_should_allow_correct_interfaces(): void
     {
         $definitionInterfaceResolver = new DefinitionInterfaceResolver();
         $definitionClass = $this->createAnonymousDefinitionInterface(
@@ -46,7 +46,7 @@ class DefinitionInterfaceResolverTest extends TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function it_should_fail_for_records_not_implementing_the_interface_for_value_schema()
+    public function it_should_fail_for_records_not_implementing_the_interface_for_value_schema(): void
     {
         $definitionInterfaceResolver = new DefinitionInterfaceResolver();
 
@@ -58,7 +58,7 @@ class DefinitionInterfaceResolverTest extends TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function it_should_fail_for_records_not_implementing_the_interface_for_key_schema()
+    public function it_should_fail_for_records_not_implementing_the_interface_for_key_schema(): void
     {
         $definitionInterfaceResolver = new DefinitionInterfaceResolver();
 
@@ -83,7 +83,7 @@ class DefinitionInterfaceResolverTest extends TestCase
                 return self::$valueSchema;
             }
 
-            public static function keySchemaJson()
+            public static function keySchemaJson(): ?string
             {
                 return self::$keySchema;
             }

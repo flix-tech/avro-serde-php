@@ -134,11 +134,7 @@ class RecordSerializer
         $decoded = decode($binaryMessage);
         $schemaId = valueOf($decoded->bind($this->schemaIdGetter));
         $writersSchema = $this->extractValueFromRegistryResponse($this->registry->schemaForId($schemaId));
-
-        if (null === $readersSchema) {
-            $readersSchema = $writersSchema;
-        }
-
+        $readersSchema = $readersSchema ?? $writersSchema;
         $cachedReader = memoize($this->datumReaderFactoryFunc, [$writersSchema], 'reader_' . $schemaId);
 
         /** @var \Widmogrod\Monad\Maybe\Maybe $validated */
