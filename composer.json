@@ -28,7 +28,8 @@
   "autoload": {
     "psr-4": {
       "FlixTech\\AvroSerializer\\Objects\\": "src/Objects",
-      "FlixTech\\AvroSerializer\\Integrations\\": "integrations/"
+      "FlixTech\\AvroSerializer\\Integrations\\": "integrations/",
+      "FlixTech\\AvroSerializer\\Examples\\": "examples/"
     },
     "files": [
       "src/Protocol.php",
