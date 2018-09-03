@@ -57,18 +57,24 @@ composer-update:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) update --no-interaction --no-progress --no-suggest --no-scripts
 
 phpstan:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpstan analyse -l 7 src
+	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpstan.phar analyse -l 7 src
 
 cs-fixer:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/php-cs-fixer fix --config=.php_cs.dist -v --dry-run \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist -v --dry-run \
 	  --path-mode=intersection --allow-risky=yes src test
 
 cs-fixer-modify:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/php-cs-fixer fix --config=.php_cs.dist -v \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist -v \
 	  --path-mode=intersection --allow-risky=yes src test
 
 phpunit:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit
+
+coverage:
+	mkdir -p build
+	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit --coverage-clover=build/coverage.clover --coverage-text
+	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/ocular.phar code-coverage:upload --format=php-clover \
+	  --repository=g/flix-tech/avro-serde-php build/coverage.clover
 
 run:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) $(ARGS)
@@ -81,6 +87,8 @@ examples:
 install-phars:
 	curl http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o bin/php-cs-fixer.phar -LR -z bin/php-cs-fixer.phar
 	chmod a+x bin/php-cs-fixer.phar
+	curl https://scrutinizer-ci.com/ocular.phar -o bin/ocular.phar -LR -z bin/ocular.phar
+	chmod a+x bin/ocular.phar
 
 platform:
 	docker-compose down
@@ -88,6 +96,7 @@ platform:
 	sleep 15
 
 clean:
+	rm -rf build
 	docker-compose down
 
 benchmark:
