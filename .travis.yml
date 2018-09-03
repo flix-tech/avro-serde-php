@@ -24,6 +24,7 @@ matrix:
   - php: '7.3'
 
 before_script:
+- make install-phars
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo rm /usr/local/bin/docker-compose; fi;
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose; fi;
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then chmod +x docker-compose; fi;
@@ -35,10 +36,18 @@ before_script:
 script:
 - COMPOSER=composer PHP=php make ci-local
 
+jobs:
+  include:
+  - stage: coverage
+    php: 7.2
+    script:
+    - PHP=php make coverage
+
 after_script:
 - make clean
 
 branches:
   only:
   - master
+  - '/^ft-.*/'
   - '/^v\d+\.\d+(\.\d+)?(-\S*)?$/'
