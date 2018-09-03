@@ -1,7 +1,19 @@
 {
   "name": "flix-tech/avro-serde-php",
   "description": "A library to serialize and deserialize Avro records making use of the confluent schema registry",
-  "keywords": ["Confluent Platform", "Confluent", "Avro", "Avro SerDe", "Kafka", "Serialization", "Deserialization"],
+  "keywords": [
+    "confluent-platform",
+    "confluent",
+    "avro",
+    "schema-registry",
+    "schema-evolution",
+    "kafka",
+    "serialization",
+    "serializer",
+    "deserialization",
+    "symfony",
+    "symfony-serializer"
+  ],
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
@@ -19,8 +31,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
-    "phpstan/phpstan": "~0.8",
-    "friendsofphp/php-cs-fixer": "~2.0",
+    "phpstan/phpstan-shim": "~0.8",
     "phpbench/phpbench": "~0.9",
     "vlucas/phpdotenv": "~2.4",
     "symfony/serializer": "^2.8|^3.1|^4.0"
