@@ -37,7 +37,7 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
     public function it_should_encode_with_valid_encode_context(): void
     {
         $context = [
-            AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => AbstractFunctionalTestCase::SCHEMA_JSON,
+            AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => $this->avroSchema,
             AvroSerDeEncoder::CONTEXT_ENCODE_SUBJECT => 'test',
         ];
 
@@ -81,7 +81,7 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
             AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN,
             AvroSerDeEncoder::FORMAT,
             [
-                AvroSerDeEncoder::CONTEXT_DECODE_READERS_SCHEMA => AbstractFunctionalTestCase::READERS_SCHEMA_JSON,
+                AvroSerDeEncoder::CONTEXT_DECODE_READERS_SCHEMA => $this->readersSchema,
             ]
         );
 
@@ -109,22 +109,26 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
 
     public static function encodeContextValidationDataProvider(): ?\Generator
     {
-        yield 'Invalid JSON for writer\'s schema in encode context' => [
+        yield 'Invalid writer\'s schema in encode context' => [
             [
-                AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => 'INVALID_JSON',
+                AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => new \stdClass(),
                 AvroSerDeEncoder::CONTEXT_ENCODE_SUBJECT => 'test',
             ],
         ];
 
         yield 'Missing subject in encode context' => [
             [
-                AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => AbstractFunctionalTestCase::SCHEMA_JSON,
+                AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => \AvroSchema::parse(
+                    AbstractFunctionalTestCase::SCHEMA_JSON
+                ),
             ],
         ];
 
         yield 'Invalid type for subject in encode context' => [
             [
-                AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => 'INVALID_JSON',
+                AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => \AvroSchema::parse(
+                    AbstractFunctionalTestCase::SCHEMA_JSON
+                ),
                 AvroSerDeEncoder::CONTEXT_ENCODE_SUBJECT => 42,
             ],
         ];

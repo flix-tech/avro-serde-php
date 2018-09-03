@@ -30,8 +30,7 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
     public function decode($data, $format, array $context = [])
     {
         $readersSchema = $context[self::CONTEXT_DECODE_READERS_SCHEMA] ?? null;
-        Assert::that($readersSchema)->nullOr()->isJsonString();
-        $readersSchema = $readersSchema ? \AvroSchema::parse($readersSchema) : null;
+        Assert::that($readersSchema)->nullOr()->isInstanceOf(\AvroSchema::class);
 
         return $this->recordSerializer->decodeMessage($data, $readersSchema);
     }
@@ -63,7 +62,7 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
             ->keyIsset(self::CONTEXT_ENCODE_WRITERS_SCHEMA)
             ->keyIsset(self::CONTEXT_ENCODE_SUBJECT);
 
-        Assert::that($context[self::CONTEXT_ENCODE_WRITERS_SCHEMA])->isJsonString();
+        Assert::that($context[self::CONTEXT_ENCODE_WRITERS_SCHEMA])->isInstanceOf(\AvroSchema::class);
         Assert::that($context[self::CONTEXT_ENCODE_SUBJECT])
             ->string()
             ->notBlank()
