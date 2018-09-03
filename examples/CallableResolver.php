@@ -1,6 +1,8 @@
 <?php
 
-namespace FlixTech\AvroSerializer\Examples\CallableResolver;
+declare(strict_types=1);
+
+namespace FlixTech\AvroSerializer\Examples;
 
 use PHPUnit\Framework\Assert;
 
