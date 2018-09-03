@@ -40,6 +40,8 @@ jobs:
   include:
   - stage: coverage
     php: 7.2
+    env:
+    - DEPENDENCIES="stable"
     script:
     - PHP=php make coverage
 
@@ -50,4 +52,4 @@ branches:
   only:
   - master
   - '/^ft-.*/'
-  - '/^v\d+\.\d+(\.\d+)?(-\S*)?$/'
+  - '/^v\d+\.\d+\.\d+$/'
