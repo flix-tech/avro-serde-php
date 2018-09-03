@@ -11,11 +11,11 @@ use Symfony\Component\Serializer\Encoder\EncoderInterface;
 
 class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
 {
-    public const FORMAT = 'avro_with_registry';
+    public const FORMAT_AVRO = 'avro_with_registry';
 
-    public const CONTEXT_ENCODE_WRITERS_SCHEMA = self:: FORMAT . '.writers_schema';
-    public const CONTEXT_ENCODE_SUBJECT = self::FORMAT . '.subject';
-    public const CONTEXT_DECODE_READERS_SCHEMA = self::FORMAT . '.readers_schema';
+    public const CONTEXT_ENCODE_WRITERS_SCHEMA = self:: FORMAT_AVRO . '.writers_schema';
+    public const CONTEXT_ENCODE_SUBJECT = self::FORMAT_AVRO . '.subject';
+    public const CONTEXT_DECODE_READERS_SCHEMA = self::FORMAT_AVRO . '.readers_schema';
 
     /**
      * @var \FlixTech\AvroSerializer\Objects\RecordSerializer
@@ -37,7 +37,7 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
 
     public function supportsDecoding($format): bool
     {
-        return self::FORMAT === $format;
+        return self::FORMAT_AVRO === $format;
     }
 
     public function encode($data, $format, array $context = [])
@@ -53,7 +53,7 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
 
     public function supportsEncoding($format): bool
     {
-        return self::FORMAT === $format;
+        return self::FORMAT_AVRO === $format;
     }
 
     private function validateEncodeContext(array $context): void

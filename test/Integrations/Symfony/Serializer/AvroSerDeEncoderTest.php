@@ -48,7 +48,7 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
 
         $result = $this->avroSerDeEncoder->encode(
             AbstractFunctionalTestCase::TEST_RECORD,
-            AvroSerDeEncoder::FORMAT,
+            AvroSerDeEncoder::FORMAT_AVRO,
             $context
         );
 
@@ -72,14 +72,14 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
 
         $result = $this->avroSerDeEncoder->decode(
             AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN,
-            AvroSerDeEncoder::FORMAT
+            AvroSerDeEncoder::FORMAT_AVRO
         );
 
         $this->assertSame('success-1', $result);
 
         $result = $this->avroSerDeEncoder->decode(
             AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN,
-            AvroSerDeEncoder::FORMAT,
+            AvroSerDeEncoder::FORMAT_AVRO,
             [
                 AvroSerDeEncoder::CONTEXT_DECODE_READERS_SCHEMA => $this->readersSchema,
             ]
@@ -102,7 +102,7 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
 
         $this->avroSerDeEncoder->encode(
             AbstractFunctionalTestCase::TEST_RECORD,
-            AvroSerDeEncoder::FORMAT,
+            AvroSerDeEncoder::FORMAT_AVRO,
             $context
         );
     }
