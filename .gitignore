@@ -10,8 +10,10 @@ composer.phar
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
 composer.lock
 
+# Custom entries
 .php_cs*.cache
-
 .env
-
 variables.mk
+build/
+ocular.phar
+php-cs-fixer.phar

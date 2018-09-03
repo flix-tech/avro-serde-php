@@ -5,8 +5,6 @@
         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/7.0/phpunit.xsd"
         bootstrap="test/bootstrap.php"
         colors="true"
-        beStrictAboutTestsThatDoNotTestAnything="true"
-        backupGlobals="false"
 >
 
     <testsuites>
@@ -16,8 +14,9 @@
     </testsuites>
 
     <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+        <whitelist>
             <directory suffix=".php">src/</directory>
+            <directory suffix=".php">integrations/</directory>
         </whitelist>
     </filter>
 

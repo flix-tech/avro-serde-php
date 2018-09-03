@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/flix-tech/avro-serde-php.svg?branch=master)](https://travis-ci.org/flix-tech/avro-serde-php)
 [![Latest Stable Version](https://poser.pugx.org/flix-tech/avro-serde-php/version)](https://packagist.org/packages/flix-tech/avro-serde-php)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/?branch=master)
 [![Total Downloads](https://poser.pugx.org/flix-tech/avro-serde-php/downloads)](https://packagist.org/packages/flix-tech/avro-serde-php)
 [![License](https://poser.pugx.org/flix-tech/avro-serde-php/license)](https://packagist.org/packages/flix-tech/avro-serde-php)
 

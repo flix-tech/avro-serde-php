@@ -33,6 +33,7 @@ function encode(int $protocolVersion, int $schemaId, string $avroEncodedBinarySt
 
     return false !== $packed
         ? Right::of($packed)
+        // @codeCoverageIgnoreStart
         : Left::of(
             new AvroEncodingException(
                 \sprintf(
@@ -41,7 +42,7 @@ function encode(int $protocolVersion, int $schemaId, string $avroEncodedBinarySt
                     $schemaId
                 )
             )
-        );
+        ); // @codeCoverageIgnoreEnd
 }
 
 const encoder = '\FlixTech\AvroSerializer\Protocol\encoder';

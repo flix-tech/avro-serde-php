@@ -8,8 +8,6 @@ services:
 php:
 - '7.1'
 - '7.2'
-- '7.3'
-- nightly
 
 env:
   global:
@@ -18,12 +16,8 @@ env:
   - DEPENDENCIES="low"
   - DEPENDENCIES="stable"
 
-matrix:
-  allow_failures:
-  - php: nightly
-  - php: '7.3'
-
 before_script:
+- make install-phars
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo rm /usr/local/bin/docker-compose; fi;
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose; fi;
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then chmod +x docker-compose; fi;
@@ -35,10 +29,20 @@ before_script:
 script:
 - COMPOSER=composer PHP=php make ci-local
 
+jobs:
+  include:
+  - stage: coverage
+    php: 7.2
+    env:
+    - DEPENDENCIES="stable"
+    script:
+    - PHP=php make coverage
+
 after_script:
 - make clean
 
 branches:
   only:
   - master
-  - '/^v\d+\.\d+(\.\d+)?(-\S*)?$/'
+  - '/^ft-.*/'
+  - '/^v\d+\.\d+\.\d+$/'

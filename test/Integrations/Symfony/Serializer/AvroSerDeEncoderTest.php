@@ -34,6 +34,24 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
+    public function it_should_only_support_encoding_Avro_format(): void
+    {
+        $this->assertTrue($this->avroSerDeEncoder->supportsEncoding(AvroSerDeEncoder::FORMAT_AVRO));
+        $this->assertFalse($this->avroSerDeEncoder->supportsEncoding('any'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_only_support_decoding_Avro_format(): void
+    {
+        $this->assertTrue($this->avroSerDeEncoder->supportsDecoding(AvroSerDeEncoder::FORMAT_AVRO));
+        $this->assertFalse($this->avroSerDeEncoder->supportsDecoding('any'));
+    }
+
+    /**
+     * @test
+     */
     public function it_should_encode_with_valid_encode_context(): void
     {
         $context = [
