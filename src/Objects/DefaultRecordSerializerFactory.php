@@ -31,7 +31,11 @@ final class DefaultRecordSerializerFactory
                     new Client($guzzleClientOptions)
                 ),
                 $adapter ?? new AvroObjectCacheAdapter()
-            )
+            ),
+            [
+                RecordSerializer::OPTION_REGISTER_MISSING_SUBJECTS => true,
+                RecordSerializer::OPTION_REGISTER_MISSING_SCHEMAS => true,
+            ]
         );
     }
 }
