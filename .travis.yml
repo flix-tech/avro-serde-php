@@ -8,8 +8,6 @@ services:
 php:
 - '7.1'
 - '7.2'
-- '7.3'
-- nightly
 
 env:
   global:
@@ -17,11 +15,6 @@ env:
   matrix:
   - DEPENDENCIES="low"
   - DEPENDENCIES="stable"
-
-matrix:
-  allow_failures:
-  - php: nightly
-  - php: '7.3'
 
 before_script:
 - make install-phars
