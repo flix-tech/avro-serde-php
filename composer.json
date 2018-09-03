@@ -28,8 +28,7 @@
   "autoload": {
     "psr-4": {
       "FlixTech\\AvroSerializer\\Objects\\": "src/Objects",
-      "FlixTech\\AvroSerializer\\Integrations\\": "integrations/",
-      "FlixTech\\AvroSerializer\\Examples\\": "examples/"
+      "FlixTech\\AvroSerializer\\Integrations\\": "integrations/"
     },
     "files": [
       "src/Protocol.php",
@@ -40,7 +39,8 @@
   "autoload-dev": {
     "psr-4": {
       "FlixTech\\AvroSerializer\\Test\\": "test/",
-      "FlixTech\\AvroSerializer\\Benchmarks\\": "benchmarks/"
+      "FlixTech\\AvroSerializer\\Benchmarks\\": "benchmarks/",
+      "FlixTech\\AvroSerializer\\Examples\\": "examples/"
     }
   },
   "extra": {
