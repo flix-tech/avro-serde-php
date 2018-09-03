@@ -212,7 +212,9 @@ class RecordSerializer
 
                 break;
             default:
+                // @codeCoverageIgnoreStart
                 throw $e;
+                // @codeCoverageIgnoreEnd
         }
     }
 }
