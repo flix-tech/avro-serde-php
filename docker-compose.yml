@@ -23,7 +23,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://172.68.0.102:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://${KAFKA_BROKER_IPV4}:9092'
     networks:
       avro-serializer-net:
         ipv4_address: ${KAFKA_BROKER_IPV4}
