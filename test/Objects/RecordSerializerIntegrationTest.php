@@ -20,7 +20,7 @@ class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
      */
     public function it_encodes_valid_records(): RecordSerializer
     {
-        $serializer = DefaultRecordSerializerFactory::get(getenv('SCHEMA_REGISTRY_HOST'));
+        $serializer = DefaultRecordSerializerFactory::get(\getenv('SCHEMA_REGISTRY_HOST'));
         $encoded = $serializer->encodeRecord('test-value', $this->avroSchema, self::TEST_RECORD);
         $decoded = $serializer->decodeMessage($encoded);
 
@@ -31,7 +31,9 @@ class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
      * @depends it_encodes_valid_records
+     *
      * @expectedException \FlixTech\SchemaRegistryApi\Exception\IncompatibleAvroSchemaException
      *
      * @param \FlixTech\AvroSerializer\Objects\RecordSerializer $serializer
@@ -45,11 +47,13 @@ class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
      * @depends it_encodes_valid_records
      *
      * @param \FlixTech\AvroSerializer\Objects\RecordSerializer $serializer
      *
      * @return \FlixTech\AvroSerializer\Objects\RecordSerializer
+     *
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_decodes_with_readers_schema(RecordSerializer $serializer): RecordSerializer
