@@ -47,7 +47,8 @@ phpunit-integration:
 
 coverage:
 	mkdir -p build
-	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit --coverage-clover=build/coverage.clover --coverage-text
+	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit --exclude-group integration \
+	  --coverage-clover=build/coverage.clover --coverage-text
 	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/ocular.phar code-coverage:upload --format=php-clover \
 	  --repository=g/flix-tech/avro-serde-php build/coverage.clover
 
