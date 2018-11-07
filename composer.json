@@ -26,7 +26,7 @@
     "php": "^7.1",
     "beberlei/assert": "~2.7",
     "wikimedia/avro": "dev-master@dev",
-    "flix-tech/confluent-schema-registry-api": "^5.0",
+    "flix-tech/confluent-schema-registry-api": "^5.0.3",
     "widmogrod/php-functional": "^4.2|^5.0"
   },
   "require-dev": {
