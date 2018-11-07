@@ -15,19 +15,25 @@ env:
   matrix:
   - DEPENDENCIES="low"
   - DEPENDENCIES="stable"
+  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="3.2.4"
+  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="3.3.2"
+  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.0.2"
+  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.2"
+  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="5.0.1"
 
 before_script:
 - make install-phars
-- if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo rm /usr/local/bin/docker-compose; fi;
+- if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo rm -f /usr/local/bin/docker-compose; fi;
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose; fi;
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then chmod +x docker-compose; fi;
 - if [ "$INTEGRATION_TEST" == "enabled" ]; then sudo mv docker-compose /usr/local/bin; fi;
+- if [ "$INTEGRATION_TEST" == "enabled" ]; then make platform; fi;
 - composer self-update
 - if [ "$DEPENDENCIES" == "stable" ]; then composer update --prefer-stable; fi;
 - if [ "$DEPENDENCIES" == "low" ]; then composer update --prefer-lowest --prefer-stable; fi;
 
 script:
-- COMPOSER=composer PHP=php make ci-local
+- if [ "$INTEGRATION_TEST" == "enabled" ]; then COMPOSER=composer PHP=php make phpunit-integration ; else COMPOSER=composer PHP=php make ci-local; fi;
 
 jobs:
   include:

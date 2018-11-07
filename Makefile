@@ -3,43 +3,15 @@ MAKEFLAGS =+ -rR --warn-undefined-variables
 
 .PHONY: composer-install composer-update phpstan cs-fixer examples docker run
 
-ifndef CONFLUENT_VERSION
-    CONFLUENT_VERSION := latest
-endif
-
-ifndef CONFLUENT_NETWORK_SUBNET
-    CONFLUENT_NETWORK_SUBNET := 172.68.0.0/24
-endif
-
-ifndef SCHEMA_REGISTRY_IPV4
-    SCHEMA_REGISTRY_IPV4 := 172.68.0.103
-endif
-
-ifndef KAFKA_BROKER_IPV4
-    KAFKA_BROKER_IPV4 := 172.68.0.102
-endif
-
-ifndef ZOOKEEPER_IPV4
-    ZOOKEEPER_IPV4 := 172.68.0.101
-endif
-
-ifndef COMPOSER
-    COMPOSER := bin/composer.phar
-endif
-
-ifndef PHP
-    PHP := bin/php
-endif
-
-ifndef PHP_VERSION
-    PHP_VERSION := 7.1
-endif
-
-ifndef XDEBUG_VERSION
-    XDEBUG_VERSION := 2.6.1
-endif
-
--include variables.mk
+CONFLUENT_VERSION ?= latest
+CONFLUENT_NETWORK_SUBNET ?= 192.168.104.0/24
+SCHEMA_REGISTRY_IPV4 ?= 192.168.104.103
+KAFKA_BROKER_IPV4 ?= 192.168.104.102
+ZOOKEEPER_IPV4 ?= 192.168.104.101
+COMPOSER ?= bin/composer.phar
+PHP ?= bin/php
+PHP_VERSION ?= 7.2
+XDEBUG_VERSION ?= 2.6.1
 export
 
 docker:
@@ -68,11 +40,15 @@ cs-fixer-modify:
 	  --path-mode=intersection --allow-risky=yes src test
 
 phpunit:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit
+	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit --exclude-group integration
+
+phpunit-integration:
+	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit --group integration
 
 coverage:
 	mkdir -p build
-	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit --coverage-clover=build/coverage.clover --coverage-text
+	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpunit --exclude-group integration \
+	  --coverage-clover=build/coverage.clover --coverage-text
 	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/ocular.phar code-coverage:upload --format=php-clover \
 	  --repository=g/flix-tech/avro-serde-php build/coverage.clover
 
@@ -93,7 +69,7 @@ install-phars:
 platform:
 	docker-compose down
 	docker-compose up -d
-	sleep 15
+	sleep 20
 
 clean:
 	rm -rf build

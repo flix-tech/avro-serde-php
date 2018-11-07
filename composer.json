@@ -25,8 +25,8 @@
   "require": {
     "php": "^7.1",
     "beberlei/assert": "~2.7",
-    "flix-tech/avro-php": "^2.0",
-    "flix-tech/confluent-schema-registry-api": "^5.0",
+    "wikimedia/avro": "dev-master@dev",
+    "flix-tech/confluent-schema-registry-api": "^5.0.3",
     "widmogrod/php-functional": "^4.2|^5.0"
   },
   "require-dev": {
@@ -49,6 +49,9 @@
   },
   "suggest": {
     "symfony/serializer": "To integrate avro-serde-php into symfony ecosystem"
+  },
+  "replace": {
+    "flix-tech/avro-php": "*"
   },
   "autoload-dev": {
     "psr-4": {
