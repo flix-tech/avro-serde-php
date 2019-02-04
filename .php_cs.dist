@@ -9,7 +9,10 @@ $finder = PhpCsFixer\Finder::create()
 return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
-        'ordered_imports' => true,
+        'ordered_imports' => [
+            'sort_algorithm' => 'alpha',
+            'imports_order' => ['class', 'const', 'function'],
+        ],
         'phpdoc_summary' => false,
         'phpdoc_to_comment' => false,
         'yoda_style' => true,
