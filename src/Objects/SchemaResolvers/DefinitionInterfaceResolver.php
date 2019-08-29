@@ -12,7 +12,7 @@ use FlixTech\AvroSerializer\Objects\SchemaResolverInterface;
 class DefinitionInterfaceResolver implements SchemaResolverInterface
 {
     /**
-     * @param $record
+     * @param mixed $record
      *
      * @return \AvroSchema
      *
