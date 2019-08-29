@@ -14,6 +14,9 @@ class DefaultRecordSerializerFactoryTest extends TestCase
      */
     public function it_should_produce_a_default_RecordSerializer(): void
     {
-        DefaultRecordSerializerFactory::get('http://localhost');
+        $one = DefaultRecordSerializerFactory::get('http://localhost');
+        $two = DefaultRecordSerializerFactory::get('http://localhost');
+
+        $this->assertNotSame($one, $two);
     }
 }
