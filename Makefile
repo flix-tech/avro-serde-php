@@ -11,7 +11,7 @@ ZOOKEEPER_IPV4 ?= 192.168.104.101
 COMPOSER ?= bin/composer.phar
 PHP ?= bin/php
 PHP_VERSION ?= 7.2
-XDEBUG_VERSION ?= 2.6.1
+XDEBUG_VERSION ?= 2.7.2
 export
 
 docker:

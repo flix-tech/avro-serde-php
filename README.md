@@ -1,4 +1,4 @@
-# Avro SerDe for PHP 7.1+
+# Avro SerDe for PHP 7.2+
 
 [![Build Status](https://travis-ci.org/flix-tech/avro-serde-php.svg?branch=master)](https://travis-ci.org/flix-tech/avro-serde-php)
 [![Latest Stable Version](https://poser.pugx.org/flix-tech/avro-serde-php/version)](https://packagist.org/packages/flix-tech/avro-serde-php)
@@ -27,7 +27,7 @@ integrates FlixTech's [Schema Registry Client](https://github.com/flix-tech/sche
 This library is using the [composer package manager](https://getcomposer.org/) for PHP.
 
 ```bash
-composer require 'flix-tech/avro-serde-php:^1.0'
+composer require 'flix-tech/avro-serde-php:^2.0'
 ```
 
 ## Quickstart
@@ -45,11 +45,16 @@ for more detailed information.
 ```php
 <?php
 
-$schemaRegistryClient = new \FlixTech\SchemaRegistryApi\Registry\CachedRegistry(
-    new \FlixTech\SchemaRegistryApi\Registry\PromisingRegistry(
-        new \GuzzleHttp\Client(['base_uri' => 'registry.example.com'])
+use FlixTech\SchemaRegistryApi\Registry\Cache\AvroObjectCacheAdapter;
+use FlixTech\SchemaRegistryApi\Registry\CachedRegistry;
+use FlixTech\SchemaRegistryApi\Registry\PromisingRegistry;
+use GuzzleHttp\Client;
+
+$schemaRegistryClient = new CachedRegistry(
+    new PromisingRegistry(
+        new Client(['base_uri' => 'registry.example.com'])
     ),
-    new \FlixTech\SchemaRegistryApi\Registry\Cache\AvroObjectCacheAdapter()
+    new AvroObjectCacheAdapter()
 );
 ```
 
@@ -61,14 +66,16 @@ The `RecordSerializer` is the main way you interact with this library. It provid
 ```php
 <?php
 
+use FlixTech\AvroSerializer\Objects\RecordSerializer;
+
 /** @var \FlixTech\SchemaRegistryApi\Registry $schemaRegistry */
-$recordSerializer = new \FlixTech\AvroSerializer\Objects\RecordSerializer(
+$recordSerializer = new RecordSerializer(
     $schemaRegistry,
     [
         // If you want to auto-register missing schemas set this to true
-        \FlixTech\AvroSerializer\Objects\RecordSerializer::OPTION_REGISTER_MISSING_SCHEMAS => false,
+        RecordSerializer::OPTION_REGISTER_MISSING_SCHEMAS => false,
         // If you want to auto-register missing subjects set this to true
-        \FlixTech\AvroSerializer\Objects\RecordSerializer::OPTION_REGISTER_MISSING_SUBJECTS => false,
+        RecordSerializer::OPTION_REGISTER_MISSING_SUBJECTS => false,
     ]
 );
 ```
@@ -126,6 +133,8 @@ is targeting a key schema.
 namespace MyNamespace;
 
 use FlixTech\AvroSerializer\Objects\SchemaResolvers\FileResolver;
+use function get_class;use function is_object;
+use function str_replace;
 
 class MyRecord {}
 
@@ -133,10 +142,10 @@ $record = new MyRecord();
 
 $baseDir = __DIR__ . '/files';
 
-$inflector = function ($record, bool $isKey) {
+$inflector = static function ($record, bool $isKey) {
     $ext = $isKey ? '.key.avsc' : '.avsc';
-    $fileName = \is_object($record)
-        ? \str_replace('\\', '.', \get_class($record))
+    $fileName = is_object($record)
+        ? str_replace('\\', '.', get_class($record))
         : 'default';
     
     return $fileName . $ext;
@@ -160,6 +169,10 @@ value- or key-schemas respectively. A key schema resolver is optional.
 ```php
 <?php
 
+use FlixTech\AvroSerializer\Objects\SchemaResolvers\CallableResolver;
+use PHPUnit\Framework\Assert;
+use function Widmogrod\Functional\constt;
+
 $valueSchemaJson = '
 {
   "type": "record",
@@ -170,11 +183,11 @@ $valueSchemaJson = '
   ]
 }
 ';
-$valueSchema = \AvroSchema::parse($valueSchemaJson);
+$valueSchema = AvroSchema::parse($valueSchemaJson);
 
-$resolver = new \FlixTech\AvroSerializer\Objects\SchemaResolvers\CallableResolver(
-    \Widmogrod\Functional\constt(
-        \AvroSchema::parse($valueSchemaJson)
+$resolver = new CallableResolver(
+    constt(
+        AvroSchema::parse($valueSchemaJson)
     )
 );
 
@@ -182,7 +195,7 @@ $record = [ 'foo' => 'bar' ];
 
 $schema = $resolver->valueSchemaFor($record);
 
-\PHPUnit\Framework\Assert::assertEquals($schema, $valueSchema);
+Assert::assertEquals($schema, $valueSchema);
 ```
 
 ### DefinitionInterfaceResolver
@@ -265,6 +278,12 @@ This library provides integrations with the [Symfony Serializer component](https
 ```php
 <?php
 
+use FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder;
+use FlixTech\AvroSerializer\Objects\DefaultRecordSerializerFactory;
+use PHPUnit\Framework\Assert;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
 class User
 {
     /** @var string */
@@ -300,7 +319,7 @@ class User
     }
 }
 
-$recordSerializer = \FlixTech\AvroSerializer\Objects\DefaultRecordSerializerFactory::get(
+$recordSerializer = DefaultRecordSerializerFactory::get(
     getenv('SCHEMA_REGISTRY_HOST')
 );
 
@@ -315,27 +334,27 @@ $avroSchemaJson = '{
 
 $user = new User('Thomas', 38);
 
-$normalizer = new \Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer();
-$encoder = new \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder($recordSerializer);
+$normalizer = new GetSetMethodNormalizer();
+$encoder = new AvroSerDeEncoder($recordSerializer);
 
-$symfonySerializer = new \Symfony\Component\Serializer\Serializer([$normalizer], [$encoder]);
+$symfonySerializer = new Serializer([$normalizer], [$encoder]);
 
 $serialized = $symfonySerializer->serialize(
     $user,
-    \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::FORMAT_AVRO,
+    AvroSerDeEncoder::FORMAT_AVRO,
     [
-        \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::CONTEXT_ENCODE_SUBJECT => 'users-value',
-        \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => \AvroSchema::parse($avroSchemaJson),
+        AvroSerDeEncoder::CONTEXT_ENCODE_SUBJECT => 'users-value',
+        AvroSerDeEncoder::CONTEXT_ENCODE_WRITERS_SCHEMA => AvroSchema::parse($avroSchemaJson),
     ]
 );
 
 $deserializedUser = $symfonySerializer->deserialize(
     $serialized,
     User::class,
-    \FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder::FORMAT_AVRO
+    AvroSerDeEncoder::FORMAT_AVRO
 );
 
-\PHPUnit\Framework\Assert::assertEquals($deserializedUser, $user);
+Assert::assertEquals($deserializedUser, $user);
 
 ```
 
