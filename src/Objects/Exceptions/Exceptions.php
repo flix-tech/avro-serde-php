@@ -20,7 +20,7 @@ Record:
 "$exportedRecord"
 
 Schema:
-"{$schema->__toString()}"
+"{(string) $schema}"
 MESSAGE;
 
         return new AvroEncodingException($message, self::ERROR_ENCODING, $previous);

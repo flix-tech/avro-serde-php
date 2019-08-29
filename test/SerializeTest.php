@@ -21,8 +21,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 {
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function avroStringIo_should_produce_new_instances_of_AvroStringIO()
+    public function avroStringIo_should_produce_new_instances_of_AvroStringIO(): void
     {
         $avroStringIo = avroStringIo('test');
         $instance = new \AvroStringIO('test');
@@ -33,8 +35,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function avroBinaryEncoder_should_produce_new_instances_of_AvroBinaryEncoder()
+    public function avroBinaryEncoder_should_produce_new_instances_of_AvroBinaryEncoder(): void
     {
         $avroStringIo = avroStringIo('test');
 
@@ -47,8 +51,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function avroBinaryDecoder_should_produce_new_instances_of_AvroBinaryDecoder()
+    public function avroBinaryDecoder_should_produce_new_instances_of_AvroBinaryDecoder(): void
     {
         $avroStringIo = avroStringIo('test');
 
@@ -61,8 +67,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function avroDatumWriter_should_create_curried_function()
+    public function avroDatumWriter_should_create_curried_function(): void
     {
         $writer = new AvroIODatumWriter();
         $io = avroStringIo('');
@@ -75,8 +83,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function writeDatum_should_correctly_produce_avro_encoded_binary_string_Right_Monad()
+    public function writeDatum_should_correctly_produce_avro_encoded_binary_string_Right_Monad(): void
     {
         $writer = new AvroIODatumWriter();
         $io = avroStringIo('');
@@ -97,8 +107,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function writeDatum_should_produce_Left_Monad_for_invalid_inputs()
+    public function writeDatum_should_produce_Left_Monad_for_invalid_inputs(): void
     {
         $writer = new AvroIODatumWriter();
         $io = avroStringIo('');
@@ -111,8 +123,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function avroDatumReader_should_return_curried_function()
+    public function avroDatumReader_should_return_curried_function(): void
     {
         $writer = new \AvroIODatumReader();
         $io = avroStringIo('');
@@ -125,8 +139,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function readDatum_should_return_Right_Monad_for_valid_inputs()
+    public function readDatum_should_return_Right_Monad_for_valid_inputs(): void
     {
         $reader = new \AvroIODatumReader();
         $io = avroStringIo('');
@@ -150,8 +166,10 @@ class SerializeTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroIOException
      */
-    public function readDatum_should_turn_Left_Monad_for_invalid_reader_and_writer_schemas()
+    public function readDatum_should_turn_Left_Monad_for_invalid_reader_and_writer_schemas(): void
     {
         $reader = new \AvroIODatumReader();
         $io = avroStringIo('');

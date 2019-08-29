@@ -66,6 +66,10 @@ JSON;
      */
     private $schema;
 
+    /**
+     * @throws \AvroSchemaParseException
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
     public function setUp(): void
     {
         $this->schema = \AvroSchema::parse(self::SCHEMA_JSON);
@@ -194,7 +198,13 @@ JSON;
         $this->serializers[self::SYNC_CACHED]->decodeMessage($this->messages[self::SYNC_CACHED]);
     }
 
-    private function prepareTestForMode(string $mode, Registry $registry)
+    /**
+     * @param string                               $mode
+     * @param \FlixTech\SchemaRegistryApi\Registry $registry
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
+    private function prepareTestForMode(string $mode, Registry $registry): void
     {
         $result = $registry->register('test', $this->schema);
         !$result instanceof PromiseInterface ?: $result->wait();

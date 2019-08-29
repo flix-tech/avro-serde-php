@@ -19,7 +19,7 @@ class CommonTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function get_should_return_Maybe_monad()
+    public function get_should_return_Maybe_monad(): void
     {
         $array = [
             PROTOCOL_ACCESSOR_VERSION => 0,
@@ -37,7 +37,7 @@ class CommonTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function getter_returns_curried_get()
+    public function getter_returns_curried_get(): void
     {
         $this->assertEquals(
             curryN(2, get),

@@ -23,6 +23,9 @@ class ChainResolverTest extends TestCase
      */
     private $chain;
 
+    /**
+     * @throws \ReflectionException
+     */
     protected function setUp()
     {
         $this->chainOne = $this->getMockForAbstractClass(SchemaResolverInterface::class);
@@ -33,8 +36,10 @@ class ChainResolverTest extends TestCase
 
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_will_exit_early_when_a_schema_has_been_resolved()
+    public function it_will_exit_early_when_a_schema_has_been_resolved(): void
     {
         $record = 'I am a record';
         $avroSchema = \AvroSchema::parse('{"type": "string"}');
@@ -54,8 +59,10 @@ class ChainResolverTest extends TestCase
 
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_will_exit_early_when_a_key_schema_has_been_resolved()
+    public function it_will_exit_early_when_a_key_schema_has_been_resolved(): void
     {
         $record = 'I am a record';
         $avroSchema = \AvroSchema::parse('{"type": "string"}');
@@ -75,8 +82,10 @@ class ChainResolverTest extends TestCase
 
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_will_call_all_resolvers()
+    public function it_will_call_all_resolvers(): void
     {
         $record = 'I am a record';
         $avroSchema = \AvroSchema::parse('{"type": "string"}');
@@ -98,8 +107,10 @@ class ChainResolverTest extends TestCase
 
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_will_call_all_resolvers_for_key_schemas()
+    public function it_will_call_all_resolvers_for_key_schemas(): void
     {
         $record = 'I am a record';
         $avroSchema = \AvroSchema::parse('{"type": "string"}');
@@ -125,7 +136,7 @@ class ChainResolverTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage No schema resolver in the chain is able to resolve the schema for the record
      */
-    public function it_should_call_all_resolvers_and_throw_for_value_when_no_resolver_has_a_result()
+    public function it_should_call_all_resolvers_and_throw_for_value_when_no_resolver_has_a_result(): void
     {
         $record = 'I am a record';
 
@@ -145,7 +156,7 @@ class ChainResolverTest extends TestCase
     /**
      * @test
      */
-    public function it_should_call_all_resolvers_and_return_null_when_no_key_resolver_has_a_result()
+    public function it_should_call_all_resolvers_and_return_null_when_no_key_resolver_has_a_result(): void
     {
         $record = 'I am a record';
 

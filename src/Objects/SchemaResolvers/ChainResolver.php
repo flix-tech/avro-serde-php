@@ -34,7 +34,7 @@ class ChainResolver implements SchemaResolverInterface
         );
     }
 
-    public function keySchemaFor($record)
+    public function keySchemaFor($record): ?AvroSchema
     {
         $keySchema = null;
 

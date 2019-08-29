@@ -24,6 +24,10 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
      */
     private $recordSerializer;
 
+    /**
+     * @throws \ReflectionException
+     * @throws \AvroSchemaParseException
+     */
     protected function setUp()
     {
         parent::setUp();
@@ -40,6 +44,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_encode_a_record_with_schema_and_subject(): void
     {
@@ -72,6 +78,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
      *
      * @expectedException \FlixTech\AvroSerializer\Objects\Exceptions\AvroEncodingException
      * @expectedExceptionCode 501
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_throw_encoding_exception_on_invalid_schema(): void
     {
@@ -88,6 +96,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
      * @test
      *
      * @expectedException \FlixTech\SchemaRegistryApi\Exception\SchemaNotFoundException
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_not_register_new_schemas_by_default(): void
     {
@@ -106,6 +116,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_register_new_schemas_when_configured(): void
     {
@@ -145,6 +157,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
      * @test
      *
      * @expectedException \FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_fail_when_the_subject_is_not_found(): void
     {
@@ -163,6 +177,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_register_new_subject_when_configured(): void
     {
@@ -202,6 +218,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
      * @test
      *
      * @expectedException \FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_fail_when_the_subject_is_not_found_via_promise(): void
     {
@@ -222,6 +240,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
      * @test
      *
      * @expectedException \LogicException
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_fail_when_an_unexpected_exception_is_wrapped_in_a_promise(): void
     {
@@ -240,6 +260,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_decode_wire_protocol_messages_correctly(): void
     {
@@ -269,6 +291,8 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_should_decode_with_readers_schema(): void
     {

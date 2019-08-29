@@ -23,5 +23,5 @@ interface SchemaResolverInterface
      *
      * @return AvroSchema|null
      */
-    public function keySchemaFor($record);
+    public function keySchemaFor($record): ?AvroSchema;
 }

@@ -8,5 +8,5 @@ interface HasSchemaDefinitionInterface
 {
     public static function valueSchemaJson(): string;
 
-    public static function keySchemaJson();
+    public static function keySchemaJson(): ?string;
 }

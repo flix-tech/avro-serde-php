@@ -12,8 +12,10 @@ class FileResolverTest extends TestCase
 {
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_should_find_value_and_key_schemas_when_defined()
+    public function it_should_find_value_and_key_schemas_when_defined(): void
     {
         $fileSchemaResolver = $this->getFileSchemaResolverInstance();
 
@@ -33,8 +35,10 @@ class FileResolverTest extends TestCase
      * @test
      *
      * @expectedException \InvalidArgumentException
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_should_fail_for_non_existing_value_schema()
+    public function it_should_fail_for_non_existing_value_schema(): void
     {
         $fromSchemaFileResolver = $this->getFileSchemaResolverInstance();
 
@@ -46,12 +50,14 @@ class FileResolverTest extends TestCase
      * @test
      *
      * @expectedException \InvalidArgumentException
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_should_fail_for_value_schema_for_invalid_inflector_result()
+    public function it_should_fail_for_value_schema_for_invalid_inflector_result(): void
     {
         $baseDir = __DIR__ . '/files';
 
-        $inflector = function () {
+        $inflector = static function () {
             return '';
         };
 
@@ -63,12 +69,14 @@ class FileResolverTest extends TestCase
      * @test
      *
      * @expectedException \InvalidArgumentException
+     *
+     * @throws \AvroSchemaParseException
      */
-    public function it_should_fail_for_key_schema_for_invalid_inflector_result()
+    public function it_should_fail_for_key_schema_for_invalid_inflector_result(): void
     {
         $baseDir = __DIR__ . '/files';
 
-        $inflector = function () {
+        $inflector = static function () {
             return '';
         };
 
@@ -80,15 +88,18 @@ class FileResolverTest extends TestCase
     {
         $baseDir = __DIR__ . '/files';
 
-        $inflector = function ($record, bool $isKey) {
+        $inflector = static function ($record, bool $isKey) {
             $ext = $isKey ? '.key.json' : '.json';
 
-            return inflectRecord($record)
+            /** @var \Widmogrod\Common\ValueOfInterface $inflectedString */
+            $inflectedString = inflectRecord($record)
                 ->map(
-                    function ($inflectedObjectName) use ($ext) {
+                    static function ($inflectedObjectName) use ($ext) {
                         return $inflectedObjectName . $ext;
                     }
-                )->extract();
+                );
+
+            return $inflectedString->extract();
         };
 
         return new FileResolver($baseDir, $inflector);

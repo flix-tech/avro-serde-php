@@ -12,6 +12,9 @@ class CallableResolverTest extends AbstractFunctionalTestCase
 {
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
+     * @throws \AvroSchemaParseException
      */
     public function it_should_use_callable_for_resolving_value_schemas(): void
     {
@@ -23,6 +26,8 @@ class CallableResolverTest extends AbstractFunctionalTestCase
 
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
      */
     public function it_should_use_callable_for_resolving_key_schemas(): void
     {

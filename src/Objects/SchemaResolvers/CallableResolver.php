@@ -19,17 +19,27 @@ class CallableResolver implements SchemaResolverInterface
      */
     private $keySchemaResolverCallable;
 
-    public function __construct(callable $valueSchemaResolverCallable, callable $keySchemaResolverCallable = null)
+    public function __construct(callable $valueSchemaResolverCallable, ?callable $keySchemaResolverCallable = null)
     {
         $this->valueSchemaResolverCallable = $valueSchemaResolverCallable;
         $this->keySchemaResolverCallable = $keySchemaResolverCallable;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \AvroSchemaParseException
+     */
     public function valueSchemaFor($record): AvroSchema
     {
         return AvroSchema::parse(\call_user_func($this->valueSchemaResolverCallable, $record));
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \AvroSchemaParseException
+     */
     public function keySchemaFor($record): ?AvroSchema
     {
         if (!$this->keySchemaResolverCallable) {

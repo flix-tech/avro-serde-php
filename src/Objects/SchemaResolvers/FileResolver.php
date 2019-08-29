@@ -26,6 +26,11 @@ class FileResolver implements SchemaResolverInterface
         $this->inflector = $inflector;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \AvroSchemaParseException
+     */
     public function valueSchemaFor($record): AvroSchema
     {
         $inflectedFileName = \call_user_func($this->inflector, $record, false);
@@ -38,7 +43,12 @@ class FileResolver implements SchemaResolverInterface
         return AvroSchema::parse((string) @\file_get_contents($filePath));
     }
 
-    public function keySchemaFor($record)
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \AvroSchemaParseException
+     */
+    public function keySchemaFor($record): ?AvroSchema
     {
         $inflectedFileName = \call_user_func($this->inflector, $record, true);
         Assert::that($inflectedFileName)->string()->notEmpty();

@@ -68,6 +68,9 @@ JSON;
      */
     protected $invalidSchema;
 
+    /**
+     * @throws \AvroSchemaParseException
+     */
     protected function setUp()
     {
         $this->avroSchema = AvroSchema::parse(self::SCHEMA_JSON);
