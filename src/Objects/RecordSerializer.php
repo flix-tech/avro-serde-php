@@ -142,7 +142,7 @@ class RecordSerializer
 
         /** @var \Widmogrod\Monad\Either\Either $read */
         $read = $validated
-            ->orElse(function () { throw new \InvalidArgumentException('Could not validate message wire protocol.'); })
+            ->orElse(static function () { throw new \InvalidArgumentException('Could not validate message wire protocol.'); })
             ->bind($this->avroBinaryGetter)
             ->bind($cachedReader($readersSchema));
 

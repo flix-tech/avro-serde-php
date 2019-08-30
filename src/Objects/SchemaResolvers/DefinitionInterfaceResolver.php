@@ -11,6 +11,13 @@ use FlixTech\AvroSerializer\Objects\SchemaResolverInterface;
 
 class DefinitionInterfaceResolver implements SchemaResolverInterface
 {
+    /**
+     * @param mixed $record
+     *
+     * @return \AvroSchema
+     *
+     * @throws \AvroSchemaParseException
+     */
     public function valueSchemaFor($record): AvroSchema
     {
         /** @var HasSchemaDefinitionInterface $record */
@@ -19,7 +26,14 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
         return AvroSchema::parse($record::valueSchemaJson());
     }
 
-    public function keySchemaFor($record)
+    /**
+     * @param mixed $record
+     *
+     * @return \AvroSchema|null
+     *
+     * @throws \AvroSchemaParseException
+     */
+    public function keySchemaFor($record): ?AvroSchema
     {
         $this->guardRecordHasDefinition($record);
 
@@ -32,10 +46,7 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
         return AvroSchema::parse($keySchemaJson);
     }
 
-    /**
-     * @param HasSchemaDefinitionInterface $record
-     */
-    private function guardRecordHasDefinition($record)
+    private function guardRecordHasDefinition($record): void
     {
         Assert::that($record)
             ->isObject()

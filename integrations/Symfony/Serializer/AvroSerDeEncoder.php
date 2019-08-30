@@ -27,6 +27,11 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
         $this->recordSerializer = $recordSerializer;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
     public function decode($data, $format, array $context = [])
     {
         $readersSchema = $context[self::CONTEXT_DECODE_READERS_SCHEMA] ?? null;
@@ -40,6 +45,12 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
         return self::FORMAT_AVRO === $format;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \AvroSchemaParseException
+     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     */
     public function encode($data, $format, array $context = [])
     {
         $this->validateEncodeContext($context);

@@ -10,6 +10,8 @@ class DefinitionInterfaceResolverTest extends TestCase
 {
     /**
      * @test
+     *
+     * @throws \AvroSchemaParseException
      */
     public function it_should_allow_correct_interfaces(): void
     {
