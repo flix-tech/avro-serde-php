@@ -33,47 +33,47 @@ class RecordSerializer
     /**
      * @var Registry
      */
-    private $registry;
+    protected $registry;
 
     /**
      * @var callable
      */
-    private $datumWriterFactoryFunc;
+    protected $datumWriterFactoryFunc;
 
     /**
      * @var callable
      */
-    private $datumReaderFactoryFunc;
+    protected $datumReaderFactoryFunc;
 
     /**
      * @var callable
      */
-    private $protocolEncoderFactoryFunc;
+    protected $protocolEncoderFactoryFunc;
 
     /**
      * @var callable
      */
-    private $schemaIdGetter;
+    protected $schemaIdGetter;
 
     /**
      * @var callable
      */
-    private $avroBinaryGetter;
+    protected $avroBinaryGetter;
 
     /**
      * @var bool
      */
-    private $registerMissingSchemas;
+    protected $registerMissingSchemas;
 
     /**
      * @var bool
      */
-    private $registerNonExistingSubjects;
+    protected $registerNonExistingSubjects;
 
     /**
      * @var callable
      */
-    private $protocolValidatorFunc;
+    protected $protocolValidatorFunc;
 
     public function __construct(Registry $registry, array $options = [])
     {
