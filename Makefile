@@ -29,7 +29,7 @@ composer-update:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) update --no-interaction --no-progress --no-suggest --no-scripts
 
 phpstan:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpstan.phar analyse -l 7 src
+	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpstan.phar analyse
 
 cs-fixer:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist -v --dry-run \
