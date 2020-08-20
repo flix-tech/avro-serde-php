@@ -60,6 +60,13 @@ function avroDatumWriter(): callable
 
 const writeDatum = '\FlixTech\AvroSerializer\Serialize\writeDatum';
 
+/**
+ * @param AvroIODatumWriter $writer
+ * @param AvroStringIO $io
+ * @param AvroSchema $schema
+ * @param mixed $record
+ * @return Either
+ */
 function writeDatum(AvroIODatumWriter $writer, AvroStringIO $io, AvroSchema $schema, $record): Either
 {
     return tryCatch(
@@ -95,6 +102,14 @@ function avroDatumReader(): callable
 
 const readDatum = '\FlixTech\AvroSerializer\Serialize\readDatum';
 
+/**
+ * @param AvroIODatumReader $reader
+ * @param AvroStringIO $io
+ * @param AvroSchema $writersSchema
+ * @param AvroSchema $readersSchema
+ * @param mixed $data
+ * @return Either
+ */
 function readDatum(
     AvroIODatumReader $reader,
     AvroStringIO $io,

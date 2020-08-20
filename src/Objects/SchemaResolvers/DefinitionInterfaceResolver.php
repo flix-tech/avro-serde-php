@@ -46,6 +46,9 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
         return AvroSchema::parse($keySchemaJson);
     }
 
+    /**
+     * @param mixed $record
+     */
     private function guardRecordHasDefinition($record): void
     {
         Assert::that($record)

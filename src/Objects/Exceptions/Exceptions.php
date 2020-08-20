@@ -9,6 +9,12 @@ final class Exceptions
     public const ERROR_ENCODING = 501;
     public const ERROR_DECODING = 502;
 
+    /**
+     * @param mixed $record
+     * @param \AvroSchema $schema
+     * @param \Exception|null $previous
+     * @return AvroEncodingException
+     */
     public static function forEncode($record, \AvroSchema $schema, \Exception $previous = null): AvroEncodingException
     {
         $exportedRecord = \var_export($record, true);

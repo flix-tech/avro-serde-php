@@ -75,6 +75,12 @@ class RecordSerializer
      */
     protected $protocolValidatorFunc;
 
+    /**
+     * RecordSerializer constructor.
+     * @param Registry $registry
+     * @param array<string,mixed> $options
+     * @throws \AvroIOException
+     */
     public function __construct(Registry $registry, array $options = [])
     {
         $this->registry = $registry;

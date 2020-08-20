@@ -11,6 +11,10 @@ use AvroSchema;
  */
 interface SchemaResolverInterface
 {
+    /**
+     * @param mixed $record
+     * @return AvroSchema
+     */
     public function valueSchemaFor($record): AvroSchema;
 
     /**
