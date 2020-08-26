@@ -85,9 +85,7 @@ function decode(string $binaryString): Either
 const validate = '\FlixTech\AvroSerializer\Protocol\validate';
 
 /**
- * @param int $protocolVersion
  * @param array<mixed,mixed> $decoded
- * @return Maybe
  */
 function validate(int $protocolVersion, array $decoded): Maybe
 {
@@ -104,7 +102,6 @@ function validate(int $protocolVersion, array $decoded): Maybe
 const validator = '\FlixTech\AvroSerializer\Protocol\validator';
 
 /**
- * @param int $protocolVersion
  * @return \Closure
  */
 function validator(int $protocolVersion)

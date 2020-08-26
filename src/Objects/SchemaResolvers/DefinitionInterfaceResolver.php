@@ -14,8 +14,6 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
     /**
      * @param mixed $record
      *
-     * @return \AvroSchema
-     *
      * @throws \AvroSchemaParseException
      */
     public function valueSchemaFor($record): AvroSchema
@@ -28,8 +26,6 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
 
     /**
      * @param mixed $record
-     *
-     * @return \AvroSchema|null
      *
      * @throws \AvroSchemaParseException
      */

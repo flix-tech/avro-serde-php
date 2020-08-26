@@ -14,10 +14,7 @@ use GuzzleHttp\Client;
 final class DefaultRecordSerializerFactory
 {
     /**
-     * @param string $schemaRegistryURL
      * @param array<string,mixed> $guzzleClientOptions
-     * @param CacheAdapter|null $adapter
-     * @return RecordSerializer
      */
     public static function get(
         string $schemaRegistryURL,

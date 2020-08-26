@@ -11,9 +11,6 @@ final class Exceptions
 
     /**
      * @param mixed $record
-     * @param \AvroSchema $schema
-     * @param \Exception|null $previous
-     * @return AvroEncodingException
      */
     public static function forEncode($record, \AvroSchema $schema, \Exception $previous = null): AvroEncodingException
     {
