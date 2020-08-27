@@ -9,6 +9,10 @@ use function Widmogrod\Monad\Maybe\nothing;
 
 const get = '\FlixTech\AvroSerializer\Common\get';
 
+/**
+ * @param mixed              $key
+ * @param array<mixed,mixed> $array
+ */
 function get($key, array $array): Maybe
 {
     return isset($array[$key])
@@ -25,6 +29,9 @@ function getter(): callable
 
 const inflectRecord = '\FlixTech\AvroSerializer\Common\inflectRecord';
 
+/**
+ * @param mixed $record
+ */
 function inflectRecord($record): Maybe
 {
     return \is_object($record)
@@ -34,6 +41,12 @@ function inflectRecord($record): Maybe
 
 const memoize = '\FlixTech\AvroSerializer\Common\memoize';
 
+/**
+ * @param array<mixed,mixed> $arguments
+ * @param string|null        $key
+ *
+ * @return mixed|null
+ */
 function memoize(callable $callback = null, array $arguments = [], $key = null)
 {
     static $storage = [];
