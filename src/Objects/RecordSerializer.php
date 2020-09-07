@@ -75,6 +75,13 @@ class RecordSerializer
      */
     protected $protocolValidatorFunc;
 
+    /**
+     * RecordSerializer constructor.
+     *
+     * @param array<string,mixed> $options
+     *
+     * @throws \AvroIOException
+     */
     public function __construct(Registry $registry, array $options = [])
     {
         $this->registry = $registry;
@@ -100,11 +107,7 @@ class RecordSerializer
     }
 
     /**
-     * @param string      $subject
-     * @param \AvroSchema $schema
-     * @param mixed       $record
-     *
-     * @return string
+     * @param mixed $record
      *
      * @throws \Exception
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
@@ -120,9 +123,6 @@ class RecordSerializer
     }
 
     /**
-     * @param string           $binaryMessage
-     * @param \AvroSchema|null $readersSchema
-     *
      * @return mixed
      *
      * @throws \InvalidArgumentException
@@ -150,11 +150,6 @@ class RecordSerializer
     }
 
     /**
-     * @param string      $subject
-     * @param \AvroSchema $schema
-     *
-     * @return int
-     *
      * @throws \Exception
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
@@ -192,8 +187,6 @@ class RecordSerializer
     }
 
     /**
-     * @param \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException $e
-     *
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     private function handleSubjectOrSchemaNotFound(SchemaRegistryException $e): void

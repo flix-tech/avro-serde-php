@@ -11,6 +11,9 @@ use AvroSchema;
  */
 interface SchemaResolverInterface
 {
+    /**
+     * @param mixed $record
+     */
     public function valueSchemaFor($record): AvroSchema;
 
     /**
@@ -20,8 +23,6 @@ interface SchemaResolverInterface
      * If the key schema cannot be resolved otherwise, this method should throw an `CannotResolveSchemaException`.
      *
      * @param mixed $record
-     *
-     * @return AvroSchema|null
      */
     public function keySchemaFor($record): ?AvroSchema;
 }

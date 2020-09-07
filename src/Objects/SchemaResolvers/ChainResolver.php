@@ -29,9 +29,7 @@ class ChainResolver implements SchemaResolverInterface
             }
         }
 
-        throw new \InvalidArgumentException(
-            'No schema resolver in the chain is able to resolve the schema for the record'
-        );
+        throw new \InvalidArgumentException('No schema resolver in the chain is able to resolve the schema for the record');
     }
 
     public function keySchemaFor($record): ?AvroSchema

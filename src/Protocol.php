@@ -64,7 +64,7 @@ function decode(string $binaryString): Either
         PROTOCOL_ACCESSOR_AVRO
     );
 
-    /** @var array|bool $unpacked */
+    /** @var array<mixed,mixed>|bool $unpacked */
     $unpacked = @\unpack(
         $packedFormat,
         $binaryString
@@ -84,6 +84,9 @@ function decode(string $binaryString): Either
 
 const validate = '\FlixTech\AvroSerializer\Protocol\validate';
 
+/**
+ * @param array<mixed,mixed> $decoded
+ */
 function validate(int $protocolVersion, array $decoded): Maybe
 {
     $valid = isset($decoded[PROTOCOL_ACCESSOR_VERSION], $decoded[PROTOCOL_ACCESSOR_SCHEMA_ID], $decoded[PROTOCOL_ACCESSOR_AVRO])
@@ -98,6 +101,9 @@ function validate(int $protocolVersion, array $decoded): Maybe
 
 const validator = '\FlixTech\AvroSerializer\Protocol\validator';
 
+/**
+ * @return \Closure
+ */
 function validator(int $protocolVersion)
 {
     return curryN(2, validate)($protocolVersion);

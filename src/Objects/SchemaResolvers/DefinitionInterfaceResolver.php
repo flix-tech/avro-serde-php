@@ -14,8 +14,6 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
     /**
      * @param mixed $record
      *
-     * @return \AvroSchema
-     *
      * @throws \AvroSchemaParseException
      */
     public function valueSchemaFor($record): AvroSchema
@@ -28,8 +26,6 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
 
     /**
      * @param mixed $record
-     *
-     * @return \AvroSchema|null
      *
      * @throws \AvroSchemaParseException
      */
@@ -46,6 +42,9 @@ class DefinitionInterfaceResolver implements SchemaResolverInterface
         return AvroSchema::parse($keySchemaJson);
     }
 
+    /**
+     * @param mixed $record
+     */
     private function guardRecordHasDefinition($record): void
     {
         Assert::that($record)
