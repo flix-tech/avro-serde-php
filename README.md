@@ -360,5 +360,5 @@ Assert::assertEquals($deserializedUser, $user);
 
 ## Examples
 
-This library provides a few executable examples in the [examples](examples) folder. You should hae a look to get an
+This library provides a few executable examples in the [examples](examples) folder. You should have a look to get an
 understanding how this library works.
