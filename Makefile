@@ -69,7 +69,7 @@ install-phars:
 platform:
 	docker-compose down
 	docker-compose up -d
-	sleep 20
+	bin/wait-for-all.sh
 
 clean:
 	rm -rf build
@@ -78,6 +78,6 @@ clean:
 benchmark:
 	docker-compose down
 	docker-compose up -d
-	sleep 15
+	bin/wait-for-all.sh
 	PHP_VERSION=$(PHP_VERSION) $(PHP) ./vendor/bin/phpbench run benchmarks/AvroEncodingBench.php --report=aggregate --retry-threshold=5
 	docker-compose down
