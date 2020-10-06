@@ -8,17 +8,26 @@ use AvroSchema;
 use FlixTech\AvroSerializer\Objects\Schema\ArrayType;
 use FlixTech\AvroSerializer\Objects\Schema\BooleanType;
 use FlixTech\AvroSerializer\Objects\Schema\BytesType;
+use FlixTech\AvroSerializer\Objects\Schema\DateType;
 use FlixTech\AvroSerializer\Objects\Schema\DoubleType;
+use FlixTech\AvroSerializer\Objects\Schema\DurationType;
 use FlixTech\AvroSerializer\Objects\Schema\EnumType;
 use FlixTech\AvroSerializer\Objects\Schema\FixedType;
 use FlixTech\AvroSerializer\Objects\Schema\FloatType;
 use FlixTech\AvroSerializer\Objects\Schema\IntType;
+use FlixTech\AvroSerializer\Objects\Schema\LocalTimestampMicros;
+use FlixTech\AvroSerializer\Objects\Schema\LocalTimestampMillisType;
 use FlixTech\AvroSerializer\Objects\Schema\LongType;
 use FlixTech\AvroSerializer\Objects\Schema\MapType;
 use FlixTech\AvroSerializer\Objects\Schema\NullType;
 use FlixTech\AvroSerializer\Objects\Schema\RecordType;
 use FlixTech\AvroSerializer\Objects\Schema\StringType;
+use FlixTech\AvroSerializer\Objects\Schema\TimeMicrosType;
+use FlixTech\AvroSerializer\Objects\Schema\TimeMillisType;
+use FlixTech\AvroSerializer\Objects\Schema\TimestampMicrosType;
+use FlixTech\AvroSerializer\Objects\Schema\TimestampMillisType;
 use FlixTech\AvroSerializer\Objects\Schema\UnionType;
+use FlixTech\AvroSerializer\Objects\Schema\UuidType;
 
 abstract class Schema implements Definition
 {
@@ -90,6 +99,51 @@ abstract class Schema implements Definition
     public static function fixed(): FixedType
     {
         return new FixedType();
+    }
+
+    public static function uuid(): UuidType
+    {
+        return new UuidType();
+    }
+
+    public static function date(): DateType
+    {
+        return new DateType();
+    }
+
+    public static function timeMillis(): TimeMillisType
+    {
+        return new TimeMillisType();
+    }
+
+    public static function timeMicros(): TimeMicrosType
+    {
+        return new TimeMicrosType();
+    }
+
+    public static function timestampMillis(): TimestampMillisType
+    {
+        return new TimestampMillisType();
+    }
+
+    public static function timestampMicros(): TimestampMicrosType
+    {
+        return new TimestampMicrosType();
+    }
+
+    public static function localTimestampMillis(): LocalTimestampMillisType
+    {
+        return new LocalTimestampMillisType();
+    }
+
+    public static function localTimestampMicros(): LocalTimestampMicros
+    {
+        return new LocalTimestampMicros();
+    }
+
+    public static function duration(): DurationType
+    {
+        return new DurationType();
     }
 
     public function parse(): AvroSchema

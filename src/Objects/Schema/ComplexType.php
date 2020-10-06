@@ -12,29 +12,20 @@ abstract class ComplexType extends Schema
     /**
      * @var array<string, mixed>
      */
-    private $attributes = [];
+    private $attributes;
 
     /**
      * @var string
      */
     private $type;
 
-    public function __construct(string $type)
+    /**
+     * @param array<string, mixed> $attributes
+     */
+    public function __construct(string $type, array $attributes = [])
     {
         $this->type = $type;
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return static
-     */
-    public function attribute(string $name, $value): self
-    {
-        $schema = clone $this;
-        $schema->attributes[$name] = $value;
-
-        return $schema;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -57,5 +48,18 @@ abstract class ComplexType extends Schema
         }
 
         return $record;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     */
+    protected function attribute(string $name, $value): self
+    {
+        $schema = clone $this;
+        $schema->attributes[$name] = $value;
+
+        return $schema;
     }
 }
