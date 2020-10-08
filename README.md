@@ -358,6 +358,28 @@ Assert::assertEquals($deserializedUser, $user);
 
 ```
 
+## Schema builder
+
+This library also provides means of defining schemas using php, very similar to 
+the [SchemaBuilder API provided by the Java SDK](https://avro.apache.org/docs/1.7.6/api/java/org/apache/avro/SchemaBuilder.html):
+
+```php
+<?php
+
+use FlixTech\AvroSerializer\Objects\Schema;
+use FlixTech\AvroSerializer\Objects\Schema\Record\FieldOption;
+
+Schema::record()
+    ->name('object')
+    ->namespace('org.acme')
+    ->doc('A test object')
+    ->aliases(['stdClass', 'array'])
+    ->field('name', Schema::string(), FieldOption::doc('Name of the object'), FieldOption::orderDesc())
+    ->field('answer', Schema::int(), FieldOption::default(42), FieldOption::orderAsc(), FieldOption::aliases('wrong', 'correct'))
+    ->field('ignore', Schema::boolean(), FieldOption::orderIgnore())
+    ->parse();
+```
+
 ## Examples
 
 This library provides a few executable examples in the [examples](examples) folder. You should have a look to get an
