@@ -146,7 +146,7 @@ abstract class Schema implements Definition
         return new DurationType();
     }
 
-    public function parse(): AvroSchema
+    final public function parse(): AvroSchema
     {
         $avro = $this->serialize();
 
