@@ -8,6 +8,6 @@ class BytesType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('bytes');
+        parent::__construct(TypeName::BYTES);
     }
 }

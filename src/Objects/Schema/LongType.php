@@ -8,6 +8,6 @@ class LongType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('long');
+        parent::__construct(TypeName::LONG);
     }
 }

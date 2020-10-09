@@ -8,6 +8,6 @@ class FloatType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('float');
+        parent::__construct(TypeName::FLOAT);
     }
 }

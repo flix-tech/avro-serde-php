@@ -6,7 +6,7 @@ namespace FlixTech\AvroSerializer\Objects\Schema\Record;
 
 class FieldOrder extends FieldOption
 {
-    private function __construct(string $order)
+    public function __construct(string $order)
     {
         parent::__construct('order', $order);
     }

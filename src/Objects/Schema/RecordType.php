@@ -17,22 +17,22 @@ class RecordType extends ComplexType
 
     public function __construct()
     {
-        parent::__construct('record');
+        parent::__construct(TypeName::RECORD);
     }
 
     public function name(string $name): self
     {
-        return $this->attribute('name', $name);
+        return $this->attribute(AttributeName::NAME, $name);
     }
 
     public function namespace(string $namespace): self
     {
-        return $this->attribute('namespace', $namespace);
+        return $this->attribute(AttributeName::NAMESPACE, $namespace);
     }
 
     public function doc(string $doc): self
     {
-        return $this->attribute('doc', $doc);
+        return $this->attribute(AttributeName::DOC, $doc);
     }
 
     /**
@@ -40,7 +40,7 @@ class RecordType extends ComplexType
      */
     public function aliases(array $aliases): self
     {
-        return $this->attribute('aliases', $aliases);
+        return $this->attribute(AttributeName::ALIASES, $aliases);
     }
 
     public function field(string $name, Schema $type, FieldOption ...$options): self
@@ -58,7 +58,7 @@ class RecordType extends ComplexType
     {
         $record = parent::serialize();
 
-        $record['fields'] = \array_map(function (Field $field) {
+        $record[AttributeName::FIELDS] = \array_map(function (Field $field) {
             return $field->serialize();
         }, $this->fields);
 

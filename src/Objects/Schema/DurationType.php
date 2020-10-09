@@ -8,25 +8,27 @@ class DurationType extends LogicalType
 {
     public function __construct()
     {
-        parent::__construct('duration', 'fixed', [
-            'size' => 12,
-        ]);
+        parent::__construct(
+            TypeName::DURATION,
+            TypeName::FIXED,
+            ['size' => 12]
+        );
     }
 
     public function name(string $name): self
     {
-        return $this->attribute('name', $name);
+        return $this->attribute(AttributeName::NAME, $name);
     }
 
     public function namespace(string $namespace): self
     {
-        return $this->attribute('namespace', $namespace);
+        return $this->attribute(AttributeName::NAMESPACE, $namespace);
     }
 
     public function aliases(string $alias, string ...$aliases): self
     {
         \array_unshift($aliases, $alias);
 
-        return $this->attribute('aliases', $aliases);
+        return $this->attribute(AttributeName::ALIASES, $aliases);
     }
 }

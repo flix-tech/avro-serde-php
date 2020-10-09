@@ -8,6 +8,6 @@ class IntType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('int');
+        parent::__construct(TypeName::INT);
     }
 }

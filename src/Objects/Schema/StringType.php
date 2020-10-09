@@ -8,6 +8,6 @@ class StringType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('string');
+        parent::__construct(TypeName::STRING);
     }
 }
