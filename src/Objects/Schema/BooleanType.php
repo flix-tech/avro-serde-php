@@ -8,6 +8,6 @@ class BooleanType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('boolean');
+        parent::__construct(TypeName::BOOLEAN);
     }
 }

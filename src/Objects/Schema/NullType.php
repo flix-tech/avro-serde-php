@@ -8,6 +8,6 @@ class NullType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('null');
+        parent::__construct(TypeName::NULL);
     }
 }

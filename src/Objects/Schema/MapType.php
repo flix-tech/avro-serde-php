@@ -10,12 +10,12 @@ class MapType extends ComplexType
 {
     public function __construct()
     {
-        parent::__construct('map');
+        parent::__construct(TypeName::MAP);
     }
 
     public function values(Schema $schema): self
     {
-        return $this->attribute('values', $schema);
+        return $this->attribute(AttributeName::VALUES, $schema);
     }
 
     /**
@@ -23,6 +23,6 @@ class MapType extends ComplexType
      */
     public function default(array $default): self
     {
-        return $this->attribute('default', $default);
+        return $this->attribute(AttributeName::DEFAULT, $default);
     }
 }

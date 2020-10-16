@@ -8,6 +8,6 @@ class DoubleType extends PrimitiveType
 {
     public function __construct()
     {
-        parent::__construct('double');
+        parent::__construct(TypeName::DOUBLE);
     }
 }

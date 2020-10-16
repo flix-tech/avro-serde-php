@@ -31,10 +31,11 @@
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0,<8.0",
-    "phpstan/phpstan": "^0.12",
+    "phpstan/phpstan": "^0.12.24",
     "phpbench/phpbench": "~0.9",
     "vlucas/phpdotenv": "~2.4",
-    "symfony/serializer": "^3.4|^4.3"
+    "symfony/serializer": "^3.4|^4.3",
+    "doctrine/annotations": "^1.10"
   },
   "autoload": {
     "psr-4": {
@@ -48,7 +49,8 @@
     ]
   },
   "suggest": {
-    "symfony/serializer": "To integrate avro-serde-php into symfony ecosystem"
+    "symfony/serializer": "To integrate avro-serde-php into symfony ecosystem",
+    "doctrine/annotations": "To enable the generation of avro schemas from annotations"
   },
   "autoload-dev": {
     "psr-4": {

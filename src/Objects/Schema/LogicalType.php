@@ -11,7 +11,7 @@ abstract class LogicalType extends ComplexType
      */
     public function __construct(string $logicalType, string $annotatedType, array $attributes = [])
     {
-        $attributes['logicalType'] = $logicalType;
+        $attributes[AttributeName::LOGICAL_TYPE] = $logicalType;
 
         parent::__construct($annotatedType, $attributes);
     }

@@ -380,6 +380,72 @@ Schema::record()
     ->parse();
 ```
 
+## Schema generator
+
+Besides providing a fluent api for defining schemas, we also provide means of generating schema from 
+class metadata (annotations). For this to work, you have to install the `doctrine/annotations` package.
+
+```php
+<?php
+
+use FlixTech\AvroSerializer\Objects\DefaultSchemaGeneratorFactory;
+use FlixTech\AvroSerializer\Objects\Schema\Generation\Annotations as SerDe;
+
+/**
+ * @SerDe\AvroType("record")
+ * @SerDe\AvroName("user")
+ */
+class User
+{
+    /**
+     * @SerDe\AvroType("string")
+     * @var string
+     */
+    private $firstName;
+
+    /**
+     * @SerDe\AvroType("string")
+     * @var string
+     */
+    private $lastName;
+
+    /**
+     * @SerDe\AvroType("int")
+     * @var int
+     */
+    private $age;
+
+    public function __construct(string $firstName, string $lastName, int $age)
+    {
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->age = $age;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function getAge(): int
+    {
+        return $this->age;
+    }
+}
+
+$generator = DefaultSchemaGeneratorFactory::get();
+
+$schema = $generator->generate(User::class);
+$avroSchema = $schema->parse();
+```
+
+Further examples on the possible annotations can be seen in the [test case](test/Objects/Schema/Generation/SchemaGeneratorTest.php).
+
 ## Examples
 
 This library provides a few executable examples in the [examples](examples) folder. You should have a look to get an

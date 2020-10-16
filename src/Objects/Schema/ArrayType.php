@@ -10,12 +10,12 @@ class ArrayType extends ComplexType
 {
     public function __construct()
     {
-        parent::__construct('array');
+        parent::__construct(TypeName::ARRAY);
     }
 
     public function items(Schema $schema): self
     {
-        return $this->attribute('items', $schema);
+        return $this->attribute(AttributeName::ITEMS, $schema);
     }
 
     /**
@@ -23,6 +23,6 @@ class ArrayType extends ComplexType
      */
     public function default(array $default): self
     {
-        return $this->attribute('default', $default);
+        return $this->attribute(AttributeName::DEFAULT, $default);
     }
 }
