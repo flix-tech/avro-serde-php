@@ -27,7 +27,7 @@
     "beberlei/assert": "^2.9.9|~3.0",
     "flix-tech/confluent-schema-registry-api": "~7.1",
     "flix-tech/avro-php": "^4.0.0",
-    "widmogrod/php-functional": "^4.2|^5.0"
+    "widmogrod/php-functional": "^4.2|^5.0|^6.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0,<8.0",
