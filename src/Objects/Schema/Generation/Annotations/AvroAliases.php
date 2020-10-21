@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FlixTech\AvroSerializer\Objects\Schema\Generation\Annotations;
 
 use FlixTech\AvroSerializer\Objects\Schema\AttributeName;
-use FlixTech\AvroSerializer\Objects\Schema\Generation\SchemaAttribute;
 use FlixTech\AvroSerializer\Objects\Schema\Generation\SchemaAttributes;
+use FlixTech\AvroSerializer\Objects\Schema\Generation\VariadicAttribute;
 
 /**
  * @Annotation
  */
-final class AvroAliases implements SchemaAttribute
+final class AvroAliases implements VariadicAttribute
 {
     /**
      * @var array<string>
