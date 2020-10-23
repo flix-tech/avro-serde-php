@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Objects\Schema\Generation;
 
-use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
+use Doctrine\Common\Annotations\Reader as DoctrineAnnotationReader;
 use ReflectionClass;
 use ReflectionProperty;
 
