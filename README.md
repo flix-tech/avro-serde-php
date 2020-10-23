@@ -358,6 +358,44 @@ Assert::assertEquals($deserializedUser, $user);
 
 ```
 
+### Name converter
+
+Sometimes your property names may differ from the names of the fields in your schema. One option
+to solve this is by using [custom Serializer annotations](https://symfony.com/doc/current/components/serializer.html#configure-name-conversion-using-metadata). However, if you're using the annotations
+provided by this library, 
+you may use our [name converter](integrations/Symfony/Serializer/NameConverter/AvroNameConverter.php)
+that parses these annotations and maps between the schema field names and the property names.
+
+```php
+<?php
+
+use FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder;
+use FlixTech\AvroSerializer\Integrations\Symfony\Serializer\NameConverter\AvroNameConverter;
+use FlixTech\AvroSerializer\Objects\DefaultRecordSerializerFactory;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use FlixTech\AvroSerializer\Objects\Schema\Generation\AnnotationReader;
+
+$recordSerializer = DefaultRecordSerializerFactory::get(
+    getenv('SCHEMA_REGISTRY_HOST')
+);
+
+AnnotationRegistry::registerLoader('class_exists');
+
+$reader = new AnnotationReader(
+    new DoctrineAnnotationReader()
+);
+
+$nameConverter = new AvroNameConverter($reader);
+
+$normalizer = new GetSetMethodNormalizer(null, $nameConverter);
+$encoder = new AvroSerDeEncoder($recordSerializer);
+
+$symfonySerializer = new Serializer([$normalizer], [$encoder]);
+```
+
 ## Schema builder
 
 This library also provides means of defining schemas using php, very similar to 
