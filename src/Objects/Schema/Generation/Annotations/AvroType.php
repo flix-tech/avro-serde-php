@@ -23,6 +23,16 @@ final class AvroType implements SchemaAttribute
      */
     public $attributes = [];
 
+    public static function create(string $typeName, SchemaAttribute ...$attributes): self
+    {
+        $avroType = new self();
+
+        $avroType->value = $typeName;
+        $avroType->attributes = $attributes;
+
+        return $avroType;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -7,7 +7,9 @@ namespace FlixTech\AvroSerializer\Test\Objects\Schema\Generation;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use FlixTech\AvroSerializer\Objects\Schema;
+use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\ArraysWithComplexType;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\EmptyRecord;
+use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\MapsWithComplexType;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\PrimitiveTypes;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\RecordWithComplexTypes;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\RecordWithRecordType;
@@ -154,6 +156,66 @@ class SchemaGeneratorTest extends TestCase
                     ->name('SimpleRecord')
                     ->namespace('org.acme')
                     ->field('intType', Schema::int(), Schema\Record\FieldOption::default(42))
+            );
+
+        $this->assertEquals($expected, $schema);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_generate_a_record_schema_with_arrays_containing_complex_types()
+    {
+        $schema = $this->generator->generate(ArraysWithComplexType::class);
+
+        $expected = Schema::record()
+            ->name('ArraysWithComplexType')
+            ->field(
+                'arrayWithUnion',
+                Schema::array()
+                    ->items(
+                        Schema::union(
+                            Schema::string(),
+                            Schema::array()->items(Schema::string())
+                        )
+                    )
+            )
+            ->field(
+                'arrayWithMap',
+                Schema::array()
+                    ->items(
+                        Schema::map()->values(Schema::string())
+                    )
+            );
+
+        $this->assertEquals($expected, $schema);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_generate_a_record_schema_with_maps_containing_complex_types()
+    {
+        $schema = $this->generator->generate(MapsWithComplexType::class);
+
+        $expected = Schema::record()
+            ->name('MapsWithComplexType')
+            ->field(
+                'mapWithUnion',
+                Schema::map()
+                    ->values(
+                        Schema::union(
+                            Schema::string(),
+                            Schema::array()->items(Schema::string())
+                        )
+                    )
+            )
+            ->field(
+                'mapWithArray',
+                Schema::map()
+                    ->values(
+                        Schema::array()->items(Schema::string())
+                    )
             );
 
         $this->assertEquals($expected, $schema);
