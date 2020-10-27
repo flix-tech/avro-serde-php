@@ -31,16 +31,15 @@ class SchemaGenerator
         $class = new ReflectionClass($className);
         $attributes = $this->reader->readClassAttributes($class);
 
-        return $this->generateFromClass($class, $attributes);
+        return $this->generateFromClass($class, new Type(TypeName::RECORD, $attributes));
     }
 
     /**
      * @param ReflectionClass<object> $class
      */
-    private function generateFromClass(ReflectionClass $class, SchemaAttributes $attributes): Schema
+    private function generateFromClass(ReflectionClass $class, Type $type): Schema
     {
-        $type = $attributes->types()[0];
-        $schema = $this->schemaFromType($type->value(), $attributes);
+        $schema = $this->schemaFromTypes($type);
 
         if (!$schema instanceof Schema\RecordType) {
             return $schema;
@@ -54,9 +53,20 @@ class SchemaGenerator
         return $schema;
     }
 
-    private function schemaFromType(string $type, SchemaAttributes $attributes): Schema
+    private function schemaFromTypes(Type ...$types): Schema
     {
-        switch ($type) {
+        if (\count($types) > 1) {
+            $unionSchemas = \array_map(function (Type $type) {
+                return $this->schemaFromTypes($type);
+            }, $types);
+
+            return Schema::union(...$unionSchemas);
+        }
+
+        $type = $types[0];
+        $attributes = $type->getAttributes();
+
+        switch ($type->getTypeName()) {
             case TypeName::RECORD:
                 if ($attributes->has(AttributeName::TARGET_CLASS)) {
                     return $this->generate($attributes->get(AttributeName::TARGET_CLASS));
@@ -125,16 +135,7 @@ class SchemaGenerator
             return $rootSchema;
         }
 
-        $mainType = $attributes->types()[0];
-        $fieldSchema = $this->schemaFromType($mainType->value(), $mainType->attributes());
-
-        if (1 < \count($attributes->types())) {
-            $unionSchemas = \array_map(function (SchemaAttribute $type) {
-                return $this->schemaFromType($type->value(), $type->attributes());
-            }, $attributes->types());
-
-            $fieldSchema = Schema::union(...$unionSchemas);
-        }
+        $fieldSchema = $this->schemaFromTypes(...$attributes->types());
 
         $fieldArgs = [
             $attributes->has(AttributeName::NAME) ? $attributes->get(AttributeName::NAME) : $property->getName(),
@@ -165,25 +166,16 @@ class SchemaGenerator
 
     private function applyAttributes(Schema $schema, SchemaAttributes $attributes): Schema
     {
-        $variadicValues = [
-            AttributeName::SYMBOLS,
-            AttributeName::ALIASES,
-        ];
-
-        $schemaValues = [
-            AttributeName::ITEMS,
-            AttributeName::VALUES,
-        ];
-
         foreach ($attributes->options() as $attribute) {
-            if (\in_array($attribute->name(), $variadicValues) && \is_array($attribute->value())) {
+            if ($attribute instanceof VariadicAttribute) {
                 $schema = $schema->{$attribute->name()}(...$attribute->value());
 
                 continue;
             }
 
-            if (\in_array($attribute->name(), $schemaValues) && \is_string($attribute->value())) {
-                $schema = $schema->{$attribute->name()}($this->schemaFromType($attribute->value(), new SchemaAttributes()));
+            if ($attribute instanceof TypeOnlyAttribute) {
+                $types = $attribute->attributes()->types();
+                $schema = $schema->{$attribute->name()}($this->schemaFromTypes(...$types));
 
                 continue;
             }
