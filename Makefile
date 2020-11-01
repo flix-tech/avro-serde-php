@@ -9,6 +9,7 @@ SCHEMA_REGISTRY_IPV4 ?= 192.168.104.103
 KAFKA_BROKER_IPV4 ?= 192.168.104.102
 ZOOKEEPER_IPV4 ?= 192.168.104.101
 COMPOSER ?= bin/composer.phar
+COMPOSER_VERSION ?= 2.0.4
 PHP ?= bin/php
 PHP_VERSION ?= 7.3
 XDEBUG_VERSION ?= 2.9.8
@@ -65,6 +66,8 @@ install-phars:
 	chmod a+x bin/php-cs-fixer.phar
 	curl https://scrutinizer-ci.com/ocular.phar -o bin/ocular.phar -LR -z bin/ocular.phar
 	chmod a+x bin/ocular.phar
+	curl https://getcomposer.org/download/$(COMPOSER_VERSION)/composer.phar -o bin/composer.phar -LR -z bin/composer.phar
+	chmod a+x bin/composer.phar
 
 platform:
 	docker-compose down
