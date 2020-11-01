@@ -24,10 +24,10 @@ docker:
 	  .
 
 composer-install:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) install --no-interaction --no-progress --no-suggest --no-scripts
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) install --no-interaction --no-progress --no-scripts
 
 composer-update:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) update --no-interaction --no-progress --no-suggest --no-scripts
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) update --no-interaction --no-progress --no-scripts
 
 phpstan:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpstan.phar analyse
