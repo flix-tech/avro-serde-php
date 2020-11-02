@@ -26,11 +26,16 @@ class SchemaAttributes implements \Countable
     }
 
     /**
-     * @return array<SchemaAttribute>
+     * @return array<Type>
      */
     public function types(): array
     {
-        return $this->attributes[AttributeName::TYPE] ?? [];
+        return \array_map(function (SchemaAttribute $schemaAttribute) {
+            return new Type(
+                $schemaAttribute->value(),
+                $schemaAttribute->attributes()
+            );
+        }, $this->attributes[AttributeName::TYPE] ?? []);
     }
 
     /**

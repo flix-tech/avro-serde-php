@@ -5,18 +5,14 @@ declare(strict_types=1);
 namespace FlixTech\AvroSerializer\Objects\Schema\Generation\Annotations;
 
 use FlixTech\AvroSerializer\Objects\Schema\AttributeName;
-use FlixTech\AvroSerializer\Objects\Schema\Generation\SchemaAttribute;
-use FlixTech\AvroSerializer\Objects\Schema\Generation\SchemaAttributes;
+use FlixTech\AvroSerializer\Objects\Schema\Generation\TypeOnlyAttribute;
 
 /**
  * @Annotation
  */
-final class AvroItems implements SchemaAttribute
+final class AvroItems implements TypeOnlyAttribute
 {
-    /**
-     * @var string
-     */
-    public $value;
+    use ContainsOnlyTypes;
 
     /**
      * {@inheritdoc}
@@ -24,21 +20,5 @@ final class AvroItems implements SchemaAttribute
     public function name(): string
     {
         return AttributeName::ITEMS;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function value(): string
-    {
-        return $this->value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributes(): SchemaAttributes
-    {
-        return new SchemaAttributes();
     }
 }
