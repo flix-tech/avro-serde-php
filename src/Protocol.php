@@ -30,7 +30,7 @@ const encode = '\FlixTech\AvroSerializer\Protocol\encode';
 function encode(int $protocolVersion, int $schemaId, string $avroEncodedBinaryString): Either
 {
     /** @var bool|string $packed */
-    $packed = @\pack('CNA*', $protocolVersion, $schemaId, $avroEncodedBinaryString);
+    $packed = @\pack('CNa*', $protocolVersion, $schemaId, $avroEncodedBinaryString);
 
     return false !== $packed
         ? Right::of($packed)
@@ -38,7 +38,7 @@ function encode(int $protocolVersion, int $schemaId, string $avroEncodedBinarySt
         : Left::of(
             new AvroEncodingException(
                 \sprintf(
-                    'Could not pack message with format "CNA*", protocol version "%d" and schema id "%d"',
+                    'Could not pack message with format "CNa*", protocol version "%d" and schema id "%d"',
                     $protocolVersion,
                     $schemaId
                 )
