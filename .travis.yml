@@ -10,9 +10,6 @@ php:
 - '7.4'
 - 'nightly'
 
-matrix:
-  fast_finish: true
-
 env:
   global:
   - DOCKER_COMPOSE_VERSION=1.27.4
@@ -64,6 +61,8 @@ jobs:
     script:
     - PHP=php make coverage
   exclude:
+  - php: 'nightly'
+    env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
   - stage: test
     env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
   - stage: test
