@@ -25,6 +25,7 @@ class AnnotationReader implements SchemaAttributeReader
      */
     public function readClassAttributes(ReflectionClass $class): SchemaAttributes
     {
+        /** @var SchemaAttribute[] $annotations */
         $annotations = $this->reader->getClassAnnotations($class);
         $attributes = \array_filter($annotations, [$this, 'onlySchemaAttributes']);
 
@@ -33,6 +34,7 @@ class AnnotationReader implements SchemaAttributeReader
 
     public function readPropertyAttributes(ReflectionProperty $property): SchemaAttributes
     {
+        /** @var SchemaAttribute[] $annotations */
         $annotations = $this->reader->getPropertyAnnotations($property);
         $attributes = \array_filter($annotations, [$this, 'onlySchemaAttributes']);
 
