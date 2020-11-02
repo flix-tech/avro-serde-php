@@ -134,8 +134,6 @@ class ChainResolverTest extends TestCase
     /**
      * @test
      *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage No schema resolver in the chain is able to resolve the schema for the record
      */
     public function it_should_call_all_resolvers_and_throw_for_value_when_no_resolver_has_a_result(): void
     {

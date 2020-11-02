@@ -34,8 +34,6 @@ class FileResolverTest extends TestCase
     /**
      * @test
      *
-     * @expectedException \InvalidArgumentException
-     *
      * @throws \AvroSchemaParseException
      */
     public function it_should_fail_for_non_existing_value_schema(): void
@@ -49,8 +47,6 @@ class FileResolverTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
      *
      * @throws \AvroSchemaParseException
      */
@@ -69,8 +65,6 @@ class FileResolverTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
      *
      * @throws \AvroSchemaParseException
      */

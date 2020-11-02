@@ -105,7 +105,6 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      * @dataProvider encodeContextValidationDataProvider
      */
     public function it_should_validate_encode_context(array $context): void

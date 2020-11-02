@@ -34,8 +34,6 @@ class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
      *
      * @depends it_encodes_valid_records
      *
-     * @expectedException \FlixTech\SchemaRegistryApi\Exception\IncompatibleAvroSchemaException
-     *
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_cannot_evolve_incompatible_schema(RecordSerializer $serializer): void

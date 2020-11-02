@@ -45,8 +45,6 @@ class DefinitionInterfaceResolverTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function it_should_fail_for_records_not_implementing_the_interface_for_value_schema(): void
     {
@@ -58,8 +56,6 @@ class DefinitionInterfaceResolverTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function it_should_fail_for_records_not_implementing_the_interface_for_key_schema(): void
     {
