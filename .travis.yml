@@ -10,17 +10,15 @@ php:
 - '7.4'
 - 'nightly'
 
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 'nightly'
+      env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
+
 env:
   global:
   - DOCKER_COMPOSE_VERSION=1.27.4
-  matrix:
-  - DEPENDENCIES="low" TOOL="phpunit"
-  - DEPENDENCIES="stable" TOOL="phpunit"
-  - DEPENDENCIES="stable" TOOL="phpstan"
-  - DEPENDENCIES="stable" TOOL="php-cs-fixer"
-  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
-  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="5.5.2"
-  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="latest"
 
 before_script:
 - make install-phars
@@ -41,11 +39,14 @@ jobs:
   - stage: test
     env: DEPENDENCIES="low" TOOL="phpunit"
     script: COMPOSER=composer PHP=php make phpunit
-  - env: DEPENDENCIES="stable" TOOL="phpunit"
+  - stage: test
+    env: DEPENDENCIES="stable" TOOL="phpunit"
     script: COMPOSER=composer PHP=php make phpunit
-  - env: DEPENDENCIES="stable" TOOL="phpstan"
+  - stage: test
+    env: DEPENDENCIES="stable" TOOL="phpstan"
     script: COMPOSER=composer PHP=php make phpstan
-  - env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
+  - stage: test
+    env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
     script: COMPOSER=composer PHP=php make cs-fixer
   - stage: integration
     php: '7.4'
@@ -61,8 +62,6 @@ jobs:
     script:
     - PHP=php make coverage
   exclude:
-  - php: nightly
-    env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
   - stage: test
     env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
   - stage: test
