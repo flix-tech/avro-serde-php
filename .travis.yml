@@ -57,7 +57,7 @@ jobs:
   - stage: coverage
     php: '7.3'
     env:
-    - DEPENDENCIES="stable"
+    - DEPENDENCIES="stable" TOOL="coverage"
     script:
     - PHP=php make coverage
   exclude:
