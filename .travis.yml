@@ -48,9 +48,12 @@ jobs:
   - env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
     script: COMPOSER=composer PHP=php make cs-fixer
   - stage: integration
+    php: '7.4'
     env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
   - env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="5.5.2"
+    php: '7.4'
   - env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="latest"
+    php: '7.4'
   - stage: coverage
     php: '7.3'
     env:
@@ -60,6 +63,12 @@ jobs:
   exclude:
   - php: nightly
     env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
+  - stage: test
+    env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
+  - stage: test
+    env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="5.5.2"
+  - stage: test
+    env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="latest"
 
 after_script:
 - make clean
