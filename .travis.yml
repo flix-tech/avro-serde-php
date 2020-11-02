@@ -5,22 +5,9 @@ language: php
 services:
 - docker
 
-php:
-- '7.3'
-- '7.4'
-- 'nightly'
-
 env:
   global:
   - DOCKER_COMPOSE_VERSION=1.27.4
-  matrix:
-  - DEPENDENCIES="low" TOOL="phpunit"
-  - DEPENDENCIES="stable" TOOL="phpunit"
-  - DEPENDENCIES="stable" TOOL="phpstan"
-  - DEPENDENCIES="stable" TOOL="php-cs-fixer"
-  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
-  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="5.5.2"
-  - DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="latest"
 
 before_script:
 - make install-phars
@@ -39,13 +26,38 @@ script:
 jobs:
   include:
   - stage: test
+    php: '7.3'
+    env: DEPENDENCIES="low" TOOL="phpunit"
+    script: COMPOSER=composer PHP=php make phpunit
+  - php: '7.4'
+    env: DEPENDENCIES="low" TOOL="phpunit"
+    script: COMPOSER=composer PHP=php make phpunit
+  - php: 'nightly'
     env: DEPENDENCIES="low" TOOL="phpunit"
     script: COMPOSER=composer PHP=php make phpunit
   - env: DEPENDENCIES="stable" TOOL="phpunit"
+    php: '7.3'
+    script: COMPOSER=composer PHP=php make phpunit
+  - env: DEPENDENCIES="stable" TOOL="phpunit"
+    php: '7.4'
+    script: COMPOSER=composer PHP=php make phpunit
+  - env: DEPENDENCIES="stable" TOOL="phpunit"
+    php: 'nightly'
     script: COMPOSER=composer PHP=php make phpunit
   - env: DEPENDENCIES="stable" TOOL="phpstan"
+    php: '7.3'
+    script: COMPOSER=composer PHP=php make phpstan
+  - env: DEPENDENCIES="stable" TOOL="phpstan"
+    php: '7.4'
+    script: COMPOSER=composer PHP=php make phpstan
+  - env: DEPENDENCIES="stable" TOOL="phpstan"
+    php: 'nightly'
     script: COMPOSER=composer PHP=php make phpstan
   - env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
+    php: '7.3'
+    script: COMPOSER=composer PHP=php make cs-fixer
+  - env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
+    php: '7.4'
     script: COMPOSER=composer PHP=php make cs-fixer
   - stage: integration
     php: '7.4'
@@ -60,15 +72,6 @@ jobs:
     - DEPENDENCIES="stable" TOOL="coverage"
     script:
     - PHP=php make coverage
-  exclude:
-  - php: 'nightly'
-    env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
-  - stage: test
-    env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
-  - stage: test
-    env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="5.5.2"
-  - stage: test
-    env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="latest"
 
 after_script:
 - make clean
