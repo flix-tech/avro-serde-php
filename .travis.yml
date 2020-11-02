@@ -59,6 +59,14 @@ jobs:
   - env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
     php: '7.4'
     script: COMPOSER=composer PHP=php make cs-fixer
+    # Coverage stage
+  - stage: coverage
+    php: '7.3'
+    env:
+      - DEPENDENCIES="stable" TOOL="coverage"
+    script:
+      - PHP=php make coverage
+    # Integration stage
   - stage: integration
     php: '7.4'
     env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
@@ -66,12 +74,6 @@ jobs:
     php: '7.4'
   - env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="latest"
     php: '7.4'
-  - stage: coverage
-    php: '7.3'
-    env:
-    - DEPENDENCIES="stable" TOOL="coverage"
-    script:
-    - PHP=php make coverage
 
 after_script:
 - make clean
