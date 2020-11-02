@@ -50,3 +50,8 @@ branches:
   - master
   - '/^ft-.*/'
   - '/^v\d+\.\d+\.\d+$/'
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+    - vendor
