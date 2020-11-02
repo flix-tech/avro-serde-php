@@ -1,3 +1,4 @@
+version: ~> 1.0
 dist: trusty
 sudo: required
 language: php
@@ -9,6 +10,12 @@ php:
 - '7.3'
 - '7.4'
 - 'nightly'
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 'nightly'
+      env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
 
 env:
   global:
@@ -61,8 +68,6 @@ jobs:
     script:
     - PHP=php make coverage
   exclude:
-  - php: nightly
-    env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
   - stage: test
     env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
   - stage: test
