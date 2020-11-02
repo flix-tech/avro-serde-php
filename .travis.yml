@@ -16,7 +16,7 @@ matrix:
 
 env:
   global:
-  - DOCKER_COMPOSE_VERSION=1.22.0
+  - DOCKER_COMPOSE_VERSION=1.27.4
   matrix:
   - DEPENDENCIES="low"
   - DEPENDENCIES="stable"
