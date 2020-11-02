@@ -30,7 +30,7 @@
     "widmogrod/php-functional": "^4.2|^5.0|^6.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~7.0,<8.0",
+    "phpunit/phpunit": "~7.0|^8.0|^9.0",
     "phpstan/phpstan": "^0.12.24",
     "phpbench/phpbench": "~0.9",
     "vlucas/phpdotenv": "~2.4",
