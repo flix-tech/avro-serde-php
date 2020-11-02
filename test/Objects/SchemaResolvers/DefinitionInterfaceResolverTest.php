@@ -50,6 +50,7 @@ class DefinitionInterfaceResolverTest extends TestCase
      */
     public function it_should_fail_for_records_not_implementing_the_interface_for_value_schema(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $definitionInterfaceResolver = new DefinitionInterfaceResolver();
 
         $definitionInterfaceResolver->valueSchemaFor([]);
@@ -62,6 +63,7 @@ class DefinitionInterfaceResolverTest extends TestCase
      */
     public function it_should_fail_for_records_not_implementing_the_interface_for_key_schema(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $definitionInterfaceResolver = new DefinitionInterfaceResolver();
 
         $definitionInterfaceResolver->keySchemaFor([]);
