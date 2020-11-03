@@ -127,6 +127,7 @@ jobs:
         name: Run Static analysis
         if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
         run: |
+          chmod a+x bin/phpstan.phar bin/php-cs-fixer.phar
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             bin/phpstan.phar analyse
