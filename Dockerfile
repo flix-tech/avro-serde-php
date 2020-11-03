@@ -4,6 +4,9 @@ FROM php:${PHP_VERSION}-cli-alpine
 
 ARG XDEBUG_VERSION=2.9.8
 
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN composer --version
+
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && apk add --no-cache --virtual .runtime-deps git libzip-dev \
     && docker-php-source extract \
