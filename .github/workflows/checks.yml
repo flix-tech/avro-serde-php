@@ -1,0 +1,38 @@
+name: "PHP Confluent Serde CI Checks"
+on:
+  pull_request:
+    types: [ opened, edited ]
+jobs:
+  export-docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: php-avro-serde:7.3
+          buil_args: |
+            PHP_VERSION=7.3
+      -
+        name: Inspect docker image
+        run: |
+          docker image inspect php-avro-serde:7.3
+      -
+        name: Save docker image
+        run: |
+          docker image save php-avro-serde:7.3 -o php-avro-serde-73.tgz
+      -
+        name: Upload docker image
+        uses: actions/upload-artifact@v2
+        with:
+          name: php-avro-serde-73
+          path: php-avro-serde-73.tgz
