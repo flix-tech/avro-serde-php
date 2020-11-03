@@ -1,7 +1,9 @@
 name: "PHP Confluent Serde CI Checks"
 on:
   pull_request:
-    types: [ opened, edited ]
+    branches:
+      - master
+      - ft/**
 jobs:
   export-docker:
     runs-on: ubuntu-latest
