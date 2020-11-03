@@ -13,12 +13,12 @@ jobs:
         run: |
           make install-phars
       -
-        name: Upload bin directory
+        name: Upload source directory
         uses: actions/upload-artifact@v2
         with:
-          name: phars-bin
+          name: source
           path: .
-  export-docker:
+  php-xdebug-docker:
     needs:
       - build-source
     strategy:
@@ -39,7 +39,7 @@ jobs:
         name: Download sources
         uses: actions/download-artifact@v2
         with:
-          name: phars-bin
+          name: source
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -68,10 +68,10 @@ jobs:
         with:
           name: php-avro-serde-${{ matrix.php.version }}
           path: php-avro-serde-${{ matrix.php.version }}.tgz
-  checks:
+  ci-checks:
     runs-on: ubuntu-20.04
     needs:
-      - export-docker
+      - php-xdebug-docker
     strategy:
       matrix:
         php:
@@ -98,7 +98,7 @@ jobs:
         name: Download sources
         uses: actions/download-artifact@v2
         with:
-          name: phars-bin
+          name: source
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -119,10 +119,23 @@ jobs:
             composer update --no-interaction --no-scripts --no-ansi ${{ matrix.php.composer }}
       -
         name: Run PHPUnit
+        if: ${{ matrix.php.version != '7.4' && matrix.php.composer != '--prefer-stable' }}
         run: |
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             vendor/bin/phpunit --exclude-group integration
+      -
+        name: Run PHPUnit with Coverage Report
+        if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
+        run: |
+          mkdir -p build
+          chmod a+x bin/ocular.phar
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            vendor/bin/phpunit --exclude-group integration --coverage-clover=build/coverage.clover --coverage-text
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            bin/ocular.phar --format=php-clover --repository=g/flix-tech/avro-serde-php build/coverage.clover --revision "${GITHUB_SHA}"
       -
         name: Run Static analysis
         if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
