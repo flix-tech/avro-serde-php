@@ -10,6 +10,7 @@ KAFKA_BROKER_IPV4 ?= 192.168.104.102
 ZOOKEEPER_IPV4 ?= 192.168.104.101
 COMPOSER ?= bin/composer.phar
 COMPOSER_VERSION ?= 2.0.4
+PHP_STAN_VERSION ?= 0.12.53
 PHP ?= bin/php
 PHP_VERSION ?= 7.3
 XDEBUG_VERSION ?= 2.9.8
@@ -19,7 +20,7 @@ docker:
 	docker build \
 	  --build-arg PHP_VERSION=$(PHP_VERSION) \
 	  --build-arg XDEBUG_VERSION=$(XDEBUG_VERSION) \
-	  -t avro-serializer-php:$(PHP_VERSION) \
+	  -t php-avro-serde:$(PHP_VERSION) \
 	  -f Dockerfile \
 	  .
 
@@ -68,6 +69,8 @@ install-phars:
 	chmod a+x bin/ocular.phar
 	curl https://getcomposer.org/download/$(COMPOSER_VERSION)/composer.phar -o bin/composer.phar -LR -z bin/composer.phar
 	chmod a+x bin/composer.phar
+	curl https://github.com/phpstan/phpstan/releases/download/$(PHP_STAN_VERSION)/phpstan.phar -o bin/phpstan.phar -LR -z bin/phpstan.phar
+	chmod a+x bin/phpstan.phar
 
 platform:
 	docker-compose down
