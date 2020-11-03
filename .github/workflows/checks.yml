@@ -6,6 +6,18 @@ on:
       - ft/**
 jobs:
   export-docker:
+    strategy:
+      matrix:
+        php:
+          -
+            version: 7.4
+            xdebug: 2.9.8
+          -
+            version: 7.3
+            xdebug: 2.9.8
+          -
+            version: rc
+            xdebug: 3.0.0beta1
     runs-on: ubuntu-latest
     steps:
       -
@@ -21,20 +33,21 @@ jobs:
           context: .
           file: ./Dockerfile
           load: true
-          tags: php-avro-serde:7.3
-          buil_args: |
-            PHP_VERSION=7.3
+          tags: php-avro-serde:${{ matrix.php.version }}
+          build-args: |
+            PHP_VERSION=${{ matrix.php.version }}
+            XDEBUG_VERSION=${{ matrix.php.xdebug }}
       -
         name: Inspect docker image
         run: |
-          docker image inspect php-avro-serde:7.3
+          docker image inspect php-avro-serde:${{ matrix.php.version }}
       -
         name: Save docker image
         run: |
-          docker image save php-avro-serde:7.3 -o php-avro-serde-73.tgz
+          docker image save php-avro-serde:${{ matrix.php.version }} -o php-avro-serde-${{ matrix.php.version }}.tgz
       -
         name: Upload docker image
         uses: actions/upload-artifact@v2
         with:
-          name: php-avro-serde-73
-          path: php-avro-serde-73.tgz
+          name: php-avro-serde-${{ matrix.php.version }}
+          path: php-avro-serde-${{ matrix.php.version }}.tgz
