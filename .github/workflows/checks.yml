@@ -18,7 +18,7 @@ jobs:
           -
             version: rc
             xdebug: 3.0.0beta1
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       -
         name: Checkout
@@ -44,10 +44,61 @@ jobs:
       -
         name: Save docker image
         run: |
-          docker image save php-avro-serde:${{ matrix.php.version }} -o php-avro-serde-${{ matrix.php.version }}.tgz
+          docker save php-avro-serde:${{ matrix.php.version }} -o php-avro-serde-${{ matrix.php.version }}.tgz
       -
         name: Upload docker image
         uses: actions/upload-artifact@v2
         with:
           name: php-avro-serde-${{ matrix.php.version }}
           path: php-avro-serde-${{ matrix.php.version }}.tgz
+  composer:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php:
+          -
+            version: 7.3
+            composer: --prefer-lowest
+          -
+            version: 7.4
+            composer: --prefer-lowest
+          -
+            version: rc
+            composer: --prefer-lowest
+          -
+            version: 7.3
+            composer: --prefer-stable
+          -
+            version: 7.4
+            composer: --prefer-stable
+          -
+            version: rc
+            composer: --prefer-stable
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Download docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: php-avro-serde-${{ matrix.php.version }}
+      -
+        name: Load docker image
+        run: |
+          docker load -i php-avro-serde-${{ matrix.php.version }}.tgz
+      -
+        name: Install vendors
+        run: |
+          docker run -it --rm --net=host --sig-proxy=true --pid=host --entrypoint="php" \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}"  -w "${GITHUB_WORKSPACE}" php-avro-serde-${{ matrix.php.version }} \
+            composer install --no-interaction --no-scripts --no-ansi ${{ matrix.php.composer }}
+      -
+        name: Upload vendors directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: composer-${{ matrix.php.version }}${{ matrix.php.composer }}
+          path: vendor
