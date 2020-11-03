@@ -133,7 +133,6 @@ class ChainResolverTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_should_call_all_resolvers_and_throw_for_value_when_no_resolver_has_a_result(): void
     {
