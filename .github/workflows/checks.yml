@@ -96,7 +96,7 @@ jobs:
         name: Install vendors
         run: |
           docker run -i --rm --net=host --sig-proxy=true --pid=host --entrypoint="php" \
-            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}"  -w "${GITHUB_WORKSPACE}" php-avro-serde-${{ matrix.php.version }} \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}"  -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             composer install --no-interaction --no-scripts --no-ansi ${{ matrix.php.composer }}
       -
         name: Upload vendors directory
