@@ -83,4 +83,3 @@ branches:
 cache:
   directories:
   - $HOME/.composer/cache/files
-  - vendor
