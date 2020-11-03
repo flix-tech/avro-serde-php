@@ -19,4 +19,4 @@ exec docker run ${DOCKER_OPTS} --rm \
     -e COMPOSER_HOME="/tmp/composer" \
     --net=host --sig-proxy=true --pid=host \
     --entrypoint="php" \
-     avro-serializer-php:${PHP_VERSION} "${@}"
+     php-avro-serde:${PHP_VERSION} "${@}"
