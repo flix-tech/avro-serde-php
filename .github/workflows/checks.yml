@@ -1,11 +1,26 @@
 name: "PHP Confluent Serde CI Checks"
 on:
   pull_request:
-    branches:
-      - master
-      - ft/**
 jobs:
+  build-source:
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Install phars
+        run: |
+          make install-phars
+      -
+        name: Upload bin directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: phars-bin
+          path: .
   export-docker:
+    needs:
+      - build-source
     strategy:
       matrix:
         php:
@@ -21,8 +36,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       -
-        name: Checkout
-        uses: actions/checkout@v2
+        name: Download sources
+        uses: actions/download-artifact@v2
+        with:
+          name: phars-bin
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -78,8 +95,10 @@ jobs:
             composer: --prefer-stable
     steps:
       -
-        name: Checkout
-        uses: actions/checkout@v2
+        name: Download sources
+        uses: actions/download-artifact@v2
+        with:
+          name: phars-bin
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -108,10 +127,10 @@ jobs:
         name: Run Static analysis
         if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
         run: |
-          make install-phars
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             bin/phpstan.phar analyse
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
-            bin/php-cs-fixer.phar analyse
+            bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v --dry-run --path-mode=intersection --allow-risky=yes \
+            src test
