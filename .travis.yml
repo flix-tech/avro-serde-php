@@ -26,7 +26,12 @@ script:
 jobs:
   include:
   - stage: test
-    php: '7.3'
+    php: '7.4'
+    env:
+      - DEPENDENCIES="stable" TOOL="coverage"
+    script:
+      - PHP=php make coverage
+  - php: '7.3'
     env: DEPENDENCIES="low" TOOL="phpunit"
     script: COMPOSER=composer PHP=php make phpunit
   - php: '7.4'
@@ -59,11 +64,6 @@ jobs:
   - env: DEPENDENCIES="stable" TOOL="php-cs-fixer"
     php: '7.4'
     script: COMPOSER=composer PHP=php make cs-fixer
-  - php: '7.4'
-    env:
-    - DEPENDENCIES="stable" TOOL="coverage"
-    script:
-    - PHP=php make coverage
   - php: '7.4'
     env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="4.1.4"
   - env: DEPENDENCIES="stable" INTEGRATION_TEST="enabled" CONFLUENT_VERSION="5.5.2"
