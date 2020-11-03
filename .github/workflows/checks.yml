@@ -195,4 +195,4 @@ jobs:
           make platform
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
-            vendor/bin/phpunit --exclude-group integration
+            vendor/bin/phpunit --group integration
