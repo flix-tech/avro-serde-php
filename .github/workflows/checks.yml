@@ -135,7 +135,7 @@ jobs:
             vendor/bin/phpunit --exclude-group integration --coverage-clover=build/coverage.clover --coverage-text
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
-            bin/ocular.phar --format=php-clover --repository=g/flix-tech/avro-serde-php build/coverage.clover --revision "${GITHUB_SHA}"
+            bin/ocular.phar --format=php-clover --repository=g/flix-tech/avro-serde-php --revision "${GITHUB_SHA}" build/coverage.clover
       -
         name: Run Static analysis
         if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
