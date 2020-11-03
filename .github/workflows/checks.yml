@@ -1,6 +1,9 @@
-name: "PHP Confluent Serde CI Checks"
+name: php-confluent-serde
 on:
   pull_request:
+  push:
+    branches:
+      - master
 jobs:
   build-source:
     runs-on: ubuntu-20.04
