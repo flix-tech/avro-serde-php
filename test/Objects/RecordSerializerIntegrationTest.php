@@ -7,6 +7,7 @@ namespace FlixTech\AvroSerializer\Test\Objects;
 use FlixTech\AvroSerializer\Objects\DefaultRecordSerializerFactory;
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use FlixTech\AvroSerializer\Test\AbstractFunctionalTestCase;
+use FlixTech\SchemaRegistryApi\Exception\IncompatibleAvroSchemaException;
 
 /**
  * @group integration
@@ -34,12 +35,11 @@ class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
      *
      * @depends it_encodes_valid_records
      *
-     * @expectedException \FlixTech\SchemaRegistryApi\Exception\IncompatibleAvroSchemaException
-     *
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
     public function it_cannot_evolve_incompatible_schema(RecordSerializer $serializer): void
     {
+        $this->expectException(IncompatibleAvroSchemaException::class);
         $serializer->encodeRecord('test-value', $this->invalidSchema, self::TEST_RECORD);
     }
 

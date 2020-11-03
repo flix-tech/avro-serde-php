@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test\Objects;
 
+use FlixTech\AvroSerializer\Objects\Exceptions\AvroEncodingException;
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use FlixTech\AvroSerializer\Test\AbstractFunctionalTestCase;
 use FlixTech\SchemaRegistryApi\Exception\SchemaNotFoundException;
+use FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException;
 use FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException;
 use FlixTech\SchemaRegistryApi\Registry;
 use GuzzleHttp\Promise\FulfilledPromise;
+use LogicException;
+use PHPUnit\Framework\MockObject\MockObject;
 use function FlixTech\AvroSerializer\Common\memoize;
 
 class RecordSerializerTest extends AbstractFunctionalTestCase
 {
     /**
-     * @var \FlixTech\SchemaRegistryApi\Registry|\PHPUnit_Framework_MockObject_MockObject
+     * @var Registry|MockObject
      */
     private $registryMock;
 
@@ -28,7 +32,7 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
      * @throws \ReflectionException
      * @throws \AvroSchemaParseException
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,7 +40,7 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
         $this->recordSerializer = new RecordSerializer($this->registryMock);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // Clear memoization between tests
         memoize();
@@ -45,21 +49,15 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_encode_a_record_with_schema_and_subject(): void
     {
         $this->registryMock
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('schemaId')
-            ->with('test', $this->avroSchema)
-            ->willReturn(self::SCHEMA_ID);
-
-        $this->registryMock
-            ->expects($this->at(1))
-            ->method('schemaId')
-            ->with('test', $this->avroSchema)
-            ->willReturn(new FulfilledPromise(self::SCHEMA_ID));
+            ->withConsecutive(['test', $this->avroSchema], ['test', $this->avroSchema])
+            ->willReturnOnConsecutiveCalls(self::SCHEMA_ID, new FulfilledPromise(self::SCHEMA_ID));
 
         $this->assertSame(
             self::HEX_BIN,
@@ -76,13 +74,12 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @expectedException \FlixTech\AvroSerializer\Objects\Exceptions\AvroEncodingException
-     * @expectedExceptionCode 501
-     *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_throw_encoding_exception_on_invalid_schema(): void
     {
+        $this->expectException(AvroEncodingException::class);
+        $this->expectExceptionCode(501);
         $this->registryMock
             ->expects($this->once())
             ->method('schemaId')
@@ -95,12 +92,11 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @expectedException \FlixTech\SchemaRegistryApi\Exception\SchemaNotFoundException
-     *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_not_register_new_schemas_by_default(): void
     {
+        $this->expectException(SchemaNotFoundException::class);
         $this->registryMock
             ->expects($this->once())
             ->method('schemaId')
@@ -117,7 +113,7 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_register_new_schemas_when_configured(): void
     {
@@ -130,16 +126,10 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
             ->willThrowException(new SchemaNotFoundException());
 
         $this->registryMock
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('register')
-            ->with('test', $this->avroSchema)
-            ->willReturn(self::SCHEMA_ID);
-
-        $this->registryMock
-            ->expects($this->at(3))
-            ->method('register')
-            ->with('test', $this->avroSchema)
-            ->willReturn(new FulfilledPromise(self::SCHEMA_ID));
+            ->withConsecutive(['test', $this->avroSchema], ['test', $this->avroSchema])
+            ->willReturn(self::SCHEMA_ID, new FulfilledPromise(self::SCHEMA_ID));
 
         $this->assertSame(
             self::HEX_BIN,
@@ -156,12 +146,11 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @expectedException \FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException
-     *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_fail_when_the_subject_is_not_found(): void
     {
+        $this->expectException(SubjectNotFoundException::class);
         $this->registryMock
             ->expects($this->once())
             ->method('schemaId')
@@ -178,7 +167,7 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_register_new_subject_when_configured(): void
     {
@@ -191,16 +180,10 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
             ->willThrowException(new SubjectNotFoundException());
 
         $this->registryMock
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('register')
-            ->with('test', $this->avroSchema)
-            ->willReturn(self::SCHEMA_ID);
-
-        $this->registryMock
-            ->expects($this->at(3))
-            ->method('register')
-            ->with('test', $this->avroSchema)
-            ->willReturn(new FulfilledPromise(self::SCHEMA_ID));
+            ->withConsecutive(['test', $this->avroSchema], ['test', $this->avroSchema])
+            ->willReturnOnConsecutiveCalls(self::SCHEMA_ID, new FulfilledPromise(self::SCHEMA_ID));
 
         $this->assertSame(
             self::HEX_BIN,
@@ -217,12 +200,11 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @expectedException \FlixTech\SchemaRegistryApi\Exception\SubjectNotFoundException
-     *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_fail_when_the_subject_is_not_found_via_promise(): void
     {
+        $this->expectException(SubjectNotFoundException::class);
         $this->registryMock
             ->expects($this->once())
             ->method('schemaId')
@@ -239,17 +221,16 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @expectedException \LogicException
-     *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+s     * @throws SchemaRegistryException
      */
     public function it_should_fail_when_an_unexpected_exception_is_wrapped_in_a_promise(): void
     {
+        $this->expectException(LogicException::class);
         $this->registryMock
             ->expects($this->once())
             ->method('schemaId')
             ->with('test', $this->avroSchema)
-            ->willThrowException(new \LogicException());
+            ->willThrowException(new LogicException());
 
         $this->registryMock
             ->expects($this->never())
@@ -261,21 +242,15 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_decode_wire_protocol_messages_correctly(): void
     {
         $this->registryMock
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('schemaForId')
-            ->with(self::SCHEMA_ID)
-            ->willReturn($this->avroSchema);
-
-        $this->registryMock
-            ->expects($this->at(1))
-            ->method('schemaForId')
-            ->with(self::SCHEMA_ID)
-            ->willReturn(new FulfilledPromise($this->avroSchema));
+            ->withConsecutive([self::SCHEMA_ID], [self::SCHEMA_ID])
+            ->willReturnOnConsecutiveCalls($this->avroSchema, new FulfilledPromise($this->avroSchema));
 
         $this->assertSame(
             self::TEST_RECORD,
@@ -292,21 +267,15 @@ class RecordSerializerTest extends AbstractFunctionalTestCase
     /**
      * @test
      *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
     public function it_should_decode_with_readers_schema(): void
     {
         $this->registryMock
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('schemaForId')
-            ->with(self::SCHEMA_ID)
-            ->willReturn($this->avroSchema);
-
-        $this->registryMock
-            ->expects($this->at(1))
-            ->method('schemaForId')
-            ->with(self::SCHEMA_ID)
-            ->willReturn(new FulfilledPromise($this->avroSchema));
+            ->withConsecutive([self::SCHEMA_ID], [self::SCHEMA_ID])
+            ->willReturnOnConsecutiveCalls($this->avroSchema, new FulfilledPromise($this->avroSchema));
 
         $this->assertSame(
             self::READERS_TEST_RECORD,

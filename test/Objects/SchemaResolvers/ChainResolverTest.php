@@ -4,17 +4,18 @@ namespace FlixTech\AvroSerializer\Test\Objects\SchemaResolvers;
 
 use FlixTech\AvroSerializer\Objects\SchemaResolverInterface;
 use FlixTech\AvroSerializer\Objects\SchemaResolvers\ChainResolver;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ChainResolverTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SchemaResolverInterface
+     * @var MockObject|SchemaResolverInterface
      */
     private $chainOne;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SchemaResolverInterface
+     * @var MockObject|SchemaResolverInterface
      */
     private $chainTwo;
 
@@ -26,7 +27,7 @@ class ChainResolverTest extends TestCase
     /**
      * @throws \ReflectionException
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->chainOne = $this->getMockForAbstractClass(SchemaResolverInterface::class);
         $this->chainTwo = $this->getMockForAbstractClass(SchemaResolverInterface::class);
@@ -132,12 +133,11 @@ class ChainResolverTest extends TestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage No schema resolver in the chain is able to resolve the schema for the record
      */
     public function it_should_call_all_resolvers_and_throw_for_value_when_no_resolver_has_a_result(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('No schema resolver in the chain is able to resolve the schema for the record');
         $record = 'I am a record';
 
         $this->chainOne->expects($this->once())

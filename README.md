@@ -1,6 +1,6 @@
-# Avro SerDe for PHP 7.2+
+# Avro SerDe for PHP 7.3+ and 8.0
 
-[![Build Status](https://travis-ci.org/flix-tech/avro-serde-php.svg?branch=master)](https://travis-ci.org/flix-tech/avro-serde-php)
+[![php-confluent-serde Actions Status](https://github.com/flix-tech/avro-serde-php/workflows/php-confluent-serde/badge.svg?branch=master)](https://github.com/flix-tech/avro-serde-php/actions)
 [![Latest Stable Version](https://poser.pugx.org/flix-tech/avro-serde-php/version)](https://packagist.org/packages/flix-tech/avro-serde-php)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/flix-tech/avro-serde-php/?branch=master)
@@ -27,7 +27,7 @@ integrates FlixTech's [Schema Registry Client](https://github.com/flix-tech/sche
 This library is using the [composer package manager](https://getcomposer.org/) for PHP.
 
 ```bash
-composer require 'flix-tech/avro-serde-php:^1.4'
+composer require 'flix-tech/avro-serde-php:^1.6'
 ```
 
 ## Quickstart

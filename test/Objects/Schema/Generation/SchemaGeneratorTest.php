@@ -22,7 +22,7 @@ class SchemaGeneratorTest extends TestCase
      */
     private $generator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         AnnotationRegistry::registerLoader('class_exists');
 

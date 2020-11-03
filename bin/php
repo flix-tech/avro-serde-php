@@ -7,7 +7,7 @@ command -v docker >/dev/null 2>&1 || { echo "docker is required to run this bina
 USER=${USER:-$( id -un )}
 GROUP=${GROUP:-$( id -gn )}
 COMPOSER_HOME=${COMPOSER_HOME:-${HOME}/.composer}
-PHP_VERSION=${PHP_VERSION:-7.2}
+PHP_VERSION=${PHP_VERSION:-7.3}
 DOCKER_OPTS=${DOCKER_OPTS:-'-it'}
 
 exec docker run ${DOCKER_OPTS} --rm \
@@ -19,4 +19,4 @@ exec docker run ${DOCKER_OPTS} --rm \
     -e COMPOSER_HOME="/tmp/composer" \
     --net=host --sig-proxy=true --pid=host \
     --entrypoint="php" \
-     avro-serializer-php:${PHP_VERSION} "${@}"
+     php-avro-serde:${PHP_VERSION} "${@}"

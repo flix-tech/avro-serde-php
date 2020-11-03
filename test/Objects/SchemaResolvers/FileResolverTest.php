@@ -34,12 +34,11 @@ class FileResolverTest extends TestCase
     /**
      * @test
      *
-     * @expectedException \InvalidArgumentException
-     *
      * @throws \AvroSchemaParseException
      */
     public function it_should_fail_for_non_existing_value_schema(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $fromSchemaFileResolver = $this->getFileSchemaResolverInstance();
 
         $this->assertNull($fromSchemaFileResolver->keySchemaFor(new TestRecordThree()));
@@ -49,12 +48,11 @@ class FileResolverTest extends TestCase
     /**
      * @test
      *
-     * @expectedException \InvalidArgumentException
-     *
      * @throws \AvroSchemaParseException
      */
     public function it_should_fail_for_value_schema_for_invalid_inflector_result(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $baseDir = __DIR__ . '/files';
 
         $inflector = static function () {
@@ -68,12 +66,11 @@ class FileResolverTest extends TestCase
     /**
      * @test
      *
-     * @expectedException \InvalidArgumentException
-     *
      * @throws \AvroSchemaParseException
      */
     public function it_should_fail_for_key_schema_for_invalid_inflector_result(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $baseDir = __DIR__ . '/files';
 
         $inflector = static function () {

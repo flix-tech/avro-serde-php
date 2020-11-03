@@ -1,0 +1,201 @@
+name: php-confluent-serde
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  build-source:
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Install phars
+        run: |
+          make install-phars
+      -
+        name: Upload source directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: source
+          path: .
+  php-xdebug-docker:
+    needs:
+      - build-source
+    strategy:
+      matrix:
+        php:
+          -
+            version: 7.4
+            xdebug: 2.9.8
+          -
+            version: 7.3
+            xdebug: 2.9.8
+          -
+            version: rc
+            xdebug: 3.0.0beta1
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: Download sources
+        uses: actions/download-artifact@v2
+        with:
+          name: source
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: php-avro-serde:${{ matrix.php.version }}
+          build-args: |
+            PHP_VERSION=${{ matrix.php.version }}
+            XDEBUG_VERSION=${{ matrix.php.xdebug }}
+      -
+        name: Inspect docker image
+        run: |
+          docker image inspect php-avro-serde:${{ matrix.php.version }}
+      -
+        name: Save docker image
+        run: |
+          docker save php-avro-serde:${{ matrix.php.version }} -o php-avro-serde-${{ matrix.php.version }}.tgz
+      -
+        name: Upload docker image
+        uses: actions/upload-artifact@v2
+        with:
+          name: php-avro-serde-${{ matrix.php.version }}
+          path: php-avro-serde-${{ matrix.php.version }}.tgz
+  ci-checks:
+    runs-on: ubuntu-20.04
+    needs:
+      - php-xdebug-docker
+    strategy:
+      matrix:
+        php:
+          -
+            version: 7.3
+            composer: --prefer-lowest
+          -
+            version: 7.4
+            composer: --prefer-lowest
+          -
+            version: rc
+            composer: --prefer-lowest
+          -
+            version: 7.3
+            composer: --prefer-stable
+          -
+            version: 7.4
+            composer: --prefer-stable
+          -
+            version: rc
+            composer: --prefer-stable
+    steps:
+      -
+        name: Download sources
+        uses: actions/download-artifact@v2
+        with:
+          name: source
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Download docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: php-avro-serde-${{ matrix.php.version }}
+      -
+        name: Load docker image
+        run: |
+          docker load -i php-avro-serde-${{ matrix.php.version }}.tgz
+      -
+        name: Install vendors
+        run: |
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            composer update --no-interaction --no-scripts --no-ansi ${{ matrix.php.composer }}
+      -
+        name: Run Static analysis
+        if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
+        run: |
+          chmod a+x bin/phpstan.phar bin/php-cs-fixer.phar
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            bin/phpstan.phar analyse
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v --dry-run --path-mode=intersection --allow-risky=yes \
+            src test
+      -
+        name: Run PHPUnit
+        if: ${{ matrix.php.version != '7.4' && matrix.php.composer != '--prefer-stable' }}
+        run: |
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            vendor/bin/phpunit --exclude-group integration
+      -
+        name: Run PHPUnit with Coverage Report
+        if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
+        run: |
+          mkdir -p build
+          chmod a+x bin/ocular.phar
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            vendor/bin/phpunit --exclude-group integration --coverage-clover=build/coverage.clover --coverage-text
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            bin/ocular.phar code-coverage:upload --format=php-clover --repository=g/flix-tech/avro-serde-php \
+            --revision="${GITHUB_SHA}" build/coverage.clover
+  confluent-integration:
+    runs-on: ubuntu-20.04
+    needs:
+      - php-xdebug-docker
+    strategy:
+      matrix:
+        confluent:
+          -
+            version: latest
+          -
+            version: 4.1.4
+          -
+            version: 5.5.2
+    steps:
+      -
+        name: Download sources
+        uses: actions/download-artifact@v2
+        with:
+          name: source
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Download docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: php-avro-serde-7.4
+      -
+        name: Load docker image
+        run: |
+          docker load -i php-avro-serde-7.4.tgz
+      -
+        name: Install vendors
+        run: |
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
+            composer update --no-interaction --no-scripts --no-ansi --prefer-stable
+      -
+        name: Run PHPUnit Integration
+        env:
+          CONFLUENT_VERSION: ${{ matrix.confluent.version }}
+        run: |
+          chmod a+x bin/wait-for-all.sh bin/wait-for-it.sh
+          make platform
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
+            vendor/bin/phpunit --group integration

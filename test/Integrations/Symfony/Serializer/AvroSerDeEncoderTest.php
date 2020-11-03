@@ -7,11 +7,13 @@ namespace FlixTech\AvroSerializer\Test\Integrations\Symfony\Serializer;
 use FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder;
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use FlixTech\AvroSerializer\Test\AbstractFunctionalTestCase;
+use InvalidArgumentException;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
 {
     /**
-     * @var RecordSerializer|\PHPUnit\Framework\MockObject\MockObject
+     * @var RecordSerializer|MockObject
      */
     private $recordSerializerMock;
 
@@ -20,7 +22,7 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
      */
     private $avroSerDeEncoder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -78,15 +80,10 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
      */
     public function it_should_decode_with_valid_decode_context(): void
     {
-        $this->recordSerializerMock->expects($this->at(0))
+        $this->recordSerializerMock->expects($this->exactly(2))
             ->method('decodeMessage')
-            ->with(AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, null)
-            ->willReturn('success-1');
-
-        $this->recordSerializerMock->expects($this->at(1))
-            ->method('decodeMessage')
-            ->with(AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, $this->readersSchema)
-            ->willReturn('success-2');
+            ->withConsecutive([AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, null], [AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, $this->readersSchema])
+            ->willReturnOnConsecutiveCalls('success-1', 'success-2');
 
         $result = $this->avroSerDeEncoder->decode(
             AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN,
@@ -108,11 +105,11 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      * @dataProvider encodeContextValidationDataProvider
      */
     public function it_should_validate_encode_context(array $context): void
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->recordSerializerMock->expects($this->never())
             ->method('encodeRecord');
 

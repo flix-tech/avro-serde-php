@@ -67,7 +67,7 @@ class ProtocolTest extends AbstractFunctionalTestCase
 
         $unpacked = $decoded->extract();
 
-        $this->assertInternalType('array', $unpacked);
+        $this->assertTrue(\is_array($unpacked));
         $this->assertSame(WIRE_FORMAT_PROTOCOL_VERSION, $unpacked[PROTOCOL_ACCESSOR_VERSION]);
         $this->assertSame(self::SCHEMA_ID, $unpacked[PROTOCOL_ACCESSOR_SCHEMA_ID]);
         $this->assertSame(self::AVRO_ENCODED_RECORD_HEX_BIN, \bin2hex($unpacked[PROTOCOL_ACCESSOR_AVRO]));

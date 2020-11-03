@@ -9,34 +9,36 @@ SCHEMA_REGISTRY_IPV4 ?= 192.168.104.103
 KAFKA_BROKER_IPV4 ?= 192.168.104.102
 ZOOKEEPER_IPV4 ?= 192.168.104.101
 COMPOSER ?= bin/composer.phar
+COMPOSER_VERSION ?= 2.0.4
+PHP_STAN_VERSION ?= 0.12.53
 PHP ?= bin/php
-PHP_VERSION ?= 7.2
-XDEBUG_VERSION ?= 2.7.2
+PHP_VERSION ?= 7.3
+XDEBUG_VERSION ?= 2.9.8
 export
 
 docker:
 	docker build \
 	  --build-arg PHP_VERSION=$(PHP_VERSION) \
 	  --build-arg XDEBUG_VERSION=$(XDEBUG_VERSION) \
-	  -t avro-serializer-php:$(PHP_VERSION) \
+	  -t php-avro-serde:$(PHP_VERSION) \
 	  -f Dockerfile \
 	  .
 
 composer-install:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) install --no-interaction --no-progress --no-suggest --no-scripts
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) install --no-interaction --no-progress --no-scripts --prefer-stable
 
 composer-update:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) update --no-interaction --no-progress --no-suggest --no-scripts
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(COMPOSER) update --no-interaction --no-progress --no-scripts --prefer-stable
 
 phpstan:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpstan.phar analyse
 
 cs-fixer:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist -v --dry-run \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v --dry-run \
 	  --path-mode=intersection --allow-risky=yes src test
 
 cs-fixer-modify:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist -v \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v \
 	  --path-mode=intersection --allow-risky=yes src test
 
 phpunit:
@@ -65,6 +67,10 @@ install-phars:
 	chmod a+x bin/php-cs-fixer.phar
 	curl https://scrutinizer-ci.com/ocular.phar -o bin/ocular.phar -LR -z bin/ocular.phar
 	chmod a+x bin/ocular.phar
+	curl https://getcomposer.org/download/$(COMPOSER_VERSION)/composer.phar -o bin/composer.phar -LR -z bin/composer.phar
+	chmod a+x bin/composer.phar
+	curl https://github.com/phpstan/phpstan/releases/download/$(PHP_STAN_VERSION)/phpstan.phar -o bin/phpstan.phar -LR -z bin/phpstan.phar
+	chmod a+x bin/phpstan.phar
 
 platform:
 	docker-compose down

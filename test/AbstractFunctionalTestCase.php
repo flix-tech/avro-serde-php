@@ -71,7 +71,7 @@ JSON;
     /**
      * @throws \AvroSchemaParseException
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->avroSchema = AvroSchema::parse(self::SCHEMA_JSON);
         $this->readersSchema = AvroSchema::parse(self::READERS_SCHEMA_JSON);
