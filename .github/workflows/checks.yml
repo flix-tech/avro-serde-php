@@ -51,7 +51,7 @@ jobs:
         with:
           name: php-avro-serde-${{ matrix.php.version }}
           path: php-avro-serde-${{ matrix.php.version }}.tgz
-  composer:
+  checks:
     runs-on: ubuntu-20.04
     needs:
       - export-docker
@@ -99,8 +99,19 @@ jobs:
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             composer update --no-interaction --no-scripts --no-ansi ${{ matrix.php.composer }}
       -
-        name: Upload vendors directory
-        uses: actions/upload-artifact@v2
-        with:
-          name: composer-${{ matrix.php.version }}${{ matrix.php.composer }}
-          path: vendor
+        name: Run PHPUnit
+        run: |
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            vendor/bin/phpunit --exclude-group integration
+      -
+        name: Run Static analysis
+        if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
+        run: |
+          make install-phars
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            bin/phpstan.phar analyse
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            bin/php-cs-fixer.phar analyse
