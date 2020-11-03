@@ -112,6 +112,12 @@ jobs:
         run: |
           docker load -i php-avro-serde-${{ matrix.php.version }}.tgz
       -
+        name: Install vendors
+        run: |
+          docker run -i --rm --net=host --sig-proxy=true --pid=host \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
+            composer update --no-interaction --no-scripts --no-ansi ${{ matrix.php.composer }}
+      -
         name: Run Static analysis
         if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
         run: |
@@ -123,12 +129,6 @@ jobs:
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v --dry-run --path-mode=intersection --allow-risky=yes \
             src test
-      -
-        name: Install vendors
-        run: |
-          docker run -i --rm --net=host --sig-proxy=true --pid=host \
-            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
-            composer update --no-interaction --no-scripts --no-ansi ${{ matrix.php.composer }}
       -
         name: Run PHPUnit
         if: ${{ matrix.php.version != '7.4' && matrix.php.composer != '--prefer-stable' }}
