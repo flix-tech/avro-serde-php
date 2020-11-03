@@ -53,6 +53,8 @@ jobs:
           path: php-avro-serde-${{ matrix.php.version }}.tgz
   composer:
     runs-on: ubuntu-20.04
+    needs:
+      - export-docker
     strategy:
       matrix:
         php:
