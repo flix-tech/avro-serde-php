@@ -191,6 +191,7 @@ jobs:
         env:
           CONFLUENT_VERSION: ${{ matrix.confluent.version }}
         run: |
+          chmod a+x bin/wait-for-all.sh
           make platform
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
