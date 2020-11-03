@@ -33,11 +33,11 @@ phpstan:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) vendor/bin/phpstan.phar analyse
 
 cs-fixer:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist -v --dry-run \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v --dry-run \
 	  --path-mode=intersection --allow-risky=yes src test
 
 cs-fixer-modify:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist -v \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v \
 	  --path-mode=intersection --allow-risky=yes src test
 
 phpunit:
