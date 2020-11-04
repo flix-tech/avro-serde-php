@@ -69,9 +69,6 @@ install-phars:
 	chmod a+x bin/composer.phar
 	curl https://github.com/phpstan/phpstan/releases/download/$(PHP_STAN_VERSION)/phpstan.phar -o bin/phpstan.phar -LR -z bin/phpstan.phar
 	chmod a+x bin/phpstan.phar
-	curl https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 -o bin/test-reporter -LR -z bin/test-reporter
-	chmod a+x bin/test-reporter
-
 
 platform:
 	docker-compose down
