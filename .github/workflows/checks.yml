@@ -134,7 +134,7 @@ jobs:
             src test
       -
         name: Run PHPUnit
-        if: ${{ matrix.php.version != '7.4' && matrix.php.composer != '--prefer-stable' }}
+        if: ${{ !(matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable') }}
         run: |
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
@@ -144,14 +144,17 @@ jobs:
         if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
         run: |
           mkdir -p build
-          chmod a+x bin/ocular.phar
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             vendor/bin/phpunit --exclude-group integration --coverage-clover=build/coverage.clover --coverage-text
-          docker run -i --rm --net=host --sig-proxy=true --pid=host \
-            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
-            bin/ocular.phar code-coverage:upload --format=php-clover --repository=g/flix-tech/avro-serde-php \
-            --revision="${GITHUB_SHA}" build/coverage.clover
+      - name: Publish code coverage
+        if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' }}
+        uses: paambaati/codeclimate-action@v2.7.4
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CODE_CLIMATE_REPORTER_ID}}
+        with:
+          coverageLocations: |
+            ${{github.workspace}}/build/coverage.clover:clover
   confluent-integration:
     runs-on: ubuntu-20.04
     needs:
