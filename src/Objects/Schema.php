@@ -19,6 +19,7 @@ use FlixTech\AvroSerializer\Objects\Schema\LocalTimestampMicros;
 use FlixTech\AvroSerializer\Objects\Schema\LocalTimestampMillisType;
 use FlixTech\AvroSerializer\Objects\Schema\LongType;
 use FlixTech\AvroSerializer\Objects\Schema\MapType;
+use FlixTech\AvroSerializer\Objects\Schema\NamedType;
 use FlixTech\AvroSerializer\Objects\Schema\NullType;
 use FlixTech\AvroSerializer\Objects\Schema\RecordType;
 use FlixTech\AvroSerializer\Objects\Schema\StringType;
@@ -69,6 +70,11 @@ abstract class Schema implements Definition
     public static function string(): StringType
     {
         return new StringType();
+    }
+
+    public static function named(string $name): NamedType
+    {
+        return new NamedType($name);
     }
 
     public static function record(): RecordType

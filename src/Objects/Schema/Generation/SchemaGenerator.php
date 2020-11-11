@@ -18,9 +18,15 @@ class SchemaGenerator
      */
     private $reader;
 
+    /**
+     * @var TypeMapper
+     */
+    private $typeMapper;
+
     public function __construct(SchemaAttributeReader $reader)
     {
         $this->reader = $reader;
+        $this->typeMapper = new TypeMapper($this);
     }
 
     /**
@@ -39,7 +45,7 @@ class SchemaGenerator
      */
     private function generateFromClass(ReflectionClass $class, Type $type): Schema
     {
-        $schema = $this->schemaFromTypes($type);
+        $schema = $this->schemaFromType($type);
 
         if (!$schema instanceof Schema\RecordType) {
             return $schema;
@@ -56,75 +62,20 @@ class SchemaGenerator
     private function schemaFromTypes(Type ...$types): Schema
     {
         if (\count($types) > 1) {
-            $unionSchemas = \array_map(function (Type $type) {
-                return $this->schemaFromTypes($type);
-            }, $types);
+            $unionSchemas = \array_map([$this, 'schemaFromType'], $types);
 
             return Schema::union(...$unionSchemas);
         }
 
-        $type = $types[0];
-        $attributes = $type->getAttributes();
+        return $this->schemaFromType($types[0]);
+    }
 
-        switch ($type->getTypeName()) {
-            case TypeName::RECORD:
-                if ($attributes->has(AttributeName::TARGET_CLASS)) {
-                    return $this->generate($attributes->get(AttributeName::TARGET_CLASS));
-                }
-                $schema = Schema::record();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::NULL:
-                $schema = Schema::null();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::BOOLEAN:
-                $schema = Schema::boolean();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::INT:
-                $schema = Schema::int();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::LONG:
-                $schema = Schema::long();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::FLOAT:
-                $schema = Schema::float();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::DOUBLE:
-                $schema = Schema::double();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::BYTES:
-                $schema = Schema::bytes();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::STRING:
-                $schema = Schema::string();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::ARRAY:
-                $schema = Schema::array();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::MAP:
-                $schema = Schema::map();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::ENUM:
-                $schema = Schema::enum();
-
-                return $this->applyAttributes($schema, $attributes);
-            case TypeName::FIXED:
-                $schema = Schema::fixed();
-
-                return $this->applyAttributes($schema, $attributes);
-            default:
-                throw new \InvalidArgumentException('$type is not a valid avro type');
-        }
+    private function schemaFromType(Type $type): Schema
+    {
+        return $this->applyAttributes(
+            $this->typeMapper->toSchema($type),
+            $type->getAttributes()
+        );
     }
 
     private function parseField(ReflectionProperty $property, Schema\RecordType $rootSchema): Schema
