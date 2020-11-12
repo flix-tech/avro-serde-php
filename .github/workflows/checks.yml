@@ -153,6 +153,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CODE_CLIMATE_REPORTER_ID}}
         with:
+          debug: true 
           coverageLocations: |
             ${{github.workspace}}/build/coverage.clover:clover
   confluent-integration:
