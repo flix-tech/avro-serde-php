@@ -151,11 +151,23 @@ class SchemaGeneratorTest extends TestCase
         $expected = Schema::record()
             ->name('RecordWithRecordType')
             ->field(
-                'simple',
+                'simpleField',
                 Schema::record()
                     ->name('SimpleRecord')
                     ->namespace('org.acme')
-                    ->field('intType', Schema::int(), Schema\Record\FieldOption::default(42))
+                    ->doc('This a simple record for testing purposes')
+                    ->field(
+                        'intType',
+                        Schema::int(),
+                        Schema\Record\FieldOption::default(42)
+                    ),
+            )
+            ->field(
+                'unionField',
+                Schema::union(
+                    Schema::null(),
+                    Schema::named('org.acme.SimpleRecord')
+                )
             );
 
         $this->assertEquals($expected, $schema);
