@@ -58,7 +58,7 @@ const decode = '\FlixTech\AvroSerializer\Protocol\decode';
 function decode(string $binaryString): Either
 {
     $packedFormat = \sprintf(
-        'C%s/N%s/A*%s',
+        'C%s/N%s/a*%s',
         PROTOCOL_ACCESSOR_VERSION,
         PROTOCOL_ACCESSOR_SCHEMA_ID,
         PROTOCOL_ACCESSOR_AVRO
