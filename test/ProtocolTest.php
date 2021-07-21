@@ -23,6 +23,9 @@ use function Widmogrod\Functional\curryN;
 
 class ProtocolTest extends AbstractFunctionalTestCase
 {
+    private const NULL_TERMINATED_HEX = '000000270f303000000000';
+    private const NULL_TERMINATED_AVRO_HEX = '303000000000';
+
     /**
      * @test
      */
@@ -148,5 +151,22 @@ class ProtocolTest extends AbstractFunctionalTestCase
         ];
 
         $this->assertInstanceOf(Nothing::class, validate(WIRE_FORMAT_PROTOCOL_VERSION, $decoded));
+    }
+
+    /**
+     * @test
+     */
+    public function null_terminated_values_unpacked_correctly(): void
+    {
+        $decoded = decode(\hex2bin(self::NULL_TERMINATED_HEX));
+
+        $this->assertInstanceOf(Right::class, $decoded);
+
+        $unpacked = $decoded->extract();
+
+        $this->assertIsArray($unpacked);
+        $this->assertSame(WIRE_FORMAT_PROTOCOL_VERSION, $unpacked[PROTOCOL_ACCESSOR_VERSION]);
+        $this->assertSame(self::SCHEMA_ID, $unpacked[PROTOCOL_ACCESSOR_SCHEMA_ID]);
+        $this->assertSame(self::NULL_TERMINATED_AVRO_HEX, \bin2hex($unpacked[PROTOCOL_ACCESSOR_AVRO]));
     }
 }
