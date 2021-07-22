@@ -13,6 +13,7 @@ COMPOSER_VERSION ?= 2.0.4
 PHP_STAN ?= bin/phpstan.phar
 PHP_STAN_VERSION ?= 0.12.53
 PHP_CS_FIXER ?= bin/php-cs-fixer.phar
+PHP_CS_FIXER_VERSION ?= 2.18.7
 PHPUNIT ?= vendor/bin/phpunit
 PHP ?= bin/php
 PHP_VERSION ?= 7.3
@@ -62,7 +63,7 @@ examples:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) examples/*
 
 install-phars:
-	curl http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o bin/php-cs-fixer.phar -LR -z bin/php-cs-fixer.phar
+	curl https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v$(PHP_CS_FIXER_VERSION)/php-cs-fixer.phar -o bin/php-cs-fixer.phar -LR -z bin/php-cs-fixer.phar
 	chmod a+x bin/php-cs-fixer.phar
 	curl https://getcomposer.org/download/$(COMPOSER_VERSION)/composer.phar -o bin/composer.phar -LR -z bin/composer.phar
 	chmod a+x bin/composer.phar
