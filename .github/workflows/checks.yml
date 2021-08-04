@@ -148,7 +148,7 @@ jobs:
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
             vendor/bin/phpunit --exclude-group integration --coverage-clover=build/coverage.clover --coverage-text
       - name: Publish code coverage
-        if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable'  && github.repository == 'flix-tech/avro-serde-php' }}
+        if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         uses: paambaati/codeclimate-action@v2.7.4
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CODE_CLIMATE_REPORTER_ID}}
