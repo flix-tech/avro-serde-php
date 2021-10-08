@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test\Objects\Schema\Generation;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use FlixTech\AvroSerializer\Objects\Schema;
+use FlixTech\AvroSerializer\Objects\Schema\Generation\SchemaAttributeReader;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\ArraysWithComplexType;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\EmptyRecord;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\MapsWithComplexType;
@@ -15,7 +14,7 @@ use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\RecordWithCom
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\RecordWithRecordType;
 use PHPUnit\Framework\TestCase;
 
-class SchemaGeneratorTest extends TestCase
+abstract class SchemaGeneratorTest extends TestCase
 {
     /**
      * @var Schema\Generation\SchemaGenerator
@@ -24,14 +23,12 @@ class SchemaGeneratorTest extends TestCase
 
     protected function setUp(): void
     {
-        AnnotationRegistry::registerLoader('class_exists');
-
         $this->generator = new Schema\Generation\SchemaGenerator(
-            new Schema\Generation\AnnotationReader(
-                new AnnotationReader()
-            )
+            $this->makeSchemaAttributeReader()
         );
     }
+
+    abstract protected function makeSchemaAttributeReader(): SchemaAttributeReader;
 
     /**
      * @test
@@ -155,7 +152,7 @@ class SchemaGeneratorTest extends TestCase
                 Schema::record()
                     ->name('SimpleRecord')
                     ->namespace('org.acme')
-                    ->doc('This a simple record for testing purposes')
+                    ->doc('This is a simple record for testing purposes')
                     ->field(
                         'intType',
                         Schema::int(),
