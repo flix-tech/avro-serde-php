@@ -9,20 +9,20 @@ SCHEMA_REGISTRY_IPV4 ?= 192.168.104.103
 KAFKA_BROKER_IPV4 ?= 192.168.104.102
 ZOOKEEPER_IPV4 ?= 192.168.104.101
 COMPOSER ?= bin/composer.phar
-COMPOSER_VERSION ?= 2.0.4
+COMPOSER_VERSION ?= 2.1.9
 PHP_STAN ?= bin/phpstan.phar
-PHP_STAN_VERSION ?= 0.12.53
+PHP_STAN_VERSION ?= 0.12.99
 PHP_CS_FIXER ?= bin/php-cs-fixer.phar
-PHP_CS_FIXER_VERSION ?= 2.18.7
+PHP_CS_FIXER_VERSION ?= 3.2.1
 PHPUNIT ?= vendor/bin/phpunit
 PHP ?= bin/php
-PHP_VERSION ?= 7.3
-XDEBUG_VERSION ?= 2.9.8
-XDEBUG_OPTIONS ?= -d xdebug.mode=off -d xdebug.coverage_enable=0
+PHP_VERSION ?= 7.4
+XDEBUG_VERSION ?= 3.1.1
+XDEBUG_OPTIONS ?= -d xdebug.mode=off
 export
 
 docker:
-	docker build \
+	DOCKER_BUILDKIT=1 docker build \
 	  --build-arg PHP_VERSION=$(PHP_VERSION) \
 	  --build-arg XDEBUG_VERSION=$(XDEBUG_VERSION) \
 	  -t php-avro-serde:$(PHP_VERSION) \
@@ -30,20 +30,20 @@ docker:
 	  .
 
 composer-install:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(COMPOSER) install --no-interaction --no-progress --no-scripts --prefer-stable
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(COMPOSER) install --no-interaction --no-progress --no-scripts
 
 composer-update:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(COMPOSER) update --no-interaction --no-progress --no-scripts --prefer-stable
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(COMPOSER) update --prefer-stable --no-interaction --no-progress --no-scripts
 
 phpstan:
 	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(PHP_STAN) analyse
 
 cs-fixer:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(PHP_CS_FIXER) fix --config=.php_cs.dist --diff -v --dry-run \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(PHP_CS_FIXER) fix --config=.php-cs-fixer.dist.php --diff -v --dry-run \
 	  --path-mode=intersection --allow-risky=yes src test
 
 cs-fixer-modify:
-	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(PHP_CS_FIXER) fix --config=.php_cs.dist --diff -v \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) $(XDEBUG_OPTIONS) $(PHP_CS_FIXER) fix --config=.php-cs-fixer.dist.php --diff -v \
 	  --path-mode=intersection --allow-risky=yes src test
 
 phpunit:
@@ -54,7 +54,7 @@ phpunit-integration:
 
 coverage:
 	mkdir -p build
-	PHP_VERSION=$(PHP_VERSION) $(PHP) -d xdebug.mode=coverage -d xdebug.coverage_enable=1 vendor/bin/phpunit --exclude-group integration \
+	PHP_VERSION=$(PHP_VERSION) $(PHP) -d xdebug.mode=coverage vendor/bin/phpunit --exclude-group integration \
 	  --coverage-clover=build/coverage.clover --coverage-text
 
 ci-local: cs-fixer phpstan phpunit
