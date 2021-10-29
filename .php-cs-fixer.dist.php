@@ -6,7 +6,7 @@ $finder = PhpCsFixer\Finder::create()
     ->in(['src', 'test'])
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         'ordered_imports' => [
@@ -20,7 +20,7 @@ return PhpCsFixer\Config::create()
         'array_syntax' => ['syntax' => 'short'],
         'list_syntax' => ['syntax' => 'short'],
         'no_null_property_initialization' => true,
-        'native_function_invocation' => true,
+        'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'all', 'strict' => false],
         'ordered_class_elements' => true,
         'php_unit_method_casing' => false,
     ])

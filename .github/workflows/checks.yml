@@ -29,13 +29,10 @@ jobs:
         php:
           -
             version: 7.4
-            xdebug: 2.9.8
+            xdebug: 3.1.1
           -
-            version: 7.3
-            xdebug: 2.9.8
-          -
-            version: rc
-            xdebug: 3.0.0beta1
+            version: 8.0
+            xdebug: 3.1.1
     runs-on: ubuntu-20.04
     steps:
       -
@@ -79,22 +76,16 @@ jobs:
       matrix:
         php:
           -
-            version: 7.3
-            composer: --prefer-lowest
-          -
             version: 7.4
             composer: --prefer-lowest
           -
-            version: rc
+            version: 8.0
             composer: --prefer-lowest
-          -
-            version: 7.3
-            composer: --prefer-stable
           -
             version: 7.4
             composer: --prefer-stable
           -
-            version: rc
+            version: 8.0
             composer: --prefer-stable
     steps:
       -
@@ -130,7 +121,7 @@ jobs:
             bin/phpstan.phar analyse
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
-            bin/php-cs-fixer.phar fix --config=.php_cs.dist --diff -v --dry-run --path-mode=intersection --allow-risky=yes \
+            bin/php-cs-fixer.phar fix --config=.php-cs-fixer.dist.php --diff -v --dry-run --path-mode=intersection --allow-risky=yes \
             src test
       -
         name: Run PHPUnit
