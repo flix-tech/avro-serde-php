@@ -6,6 +6,13 @@ $finder = PhpCsFixer\Finder::create()
     ->in(['src', 'test'])
 ;
 
+if (version_compare(PHP_VERSION, '8.1') < 0) {
+    $finder = $finder
+        ->notPath('Objects/Schema/Generation/Attributes')
+        ->notPath('Objects/Schema/Generation/AttributeReader.php')
+        ->notPath('Objects/Schema/Generation/Fixture/Attributes');
+}
+
 return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,

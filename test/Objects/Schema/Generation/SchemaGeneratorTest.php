@@ -6,12 +6,6 @@ namespace FlixTech\AvroSerializer\Test\Objects\Schema\Generation;
 
 use FlixTech\AvroSerializer\Objects\Schema;
 use FlixTech\AvroSerializer\Objects\Schema\Generation\SchemaAttributeReader;
-use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\ArraysWithComplexType;
-use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\EmptyRecord;
-use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\MapsWithComplexType;
-use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\PrimitiveTypes;
-use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\RecordWithComplexTypes;
-use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\RecordWithRecordType;
 use PHPUnit\Framework\TestCase;
 
 abstract class SchemaGeneratorTest extends TestCase
@@ -28,14 +22,12 @@ abstract class SchemaGeneratorTest extends TestCase
         );
     }
 
-    abstract protected function makeSchemaAttributeReader(): SchemaAttributeReader;
-
     /**
      * @test
      */
     public function it_should_generate_an_empty_record()
     {
-        $schema = $this->generator->generate(EmptyRecord::class);
+        $schema = $this->generator->generate($this->getEmptyRecordClass());
 
         $expected = Schema::record()
             ->name('EmptyRecord')
@@ -49,7 +41,7 @@ abstract class SchemaGeneratorTest extends TestCase
      */
     public function it_should_generate_a_record_schema_with_primitive_types()
     {
-        $schema = $this->generator->generate(PrimitiveTypes::class);
+        $schema = $this->generator->generate($this->getPrimitiveTypesClass());
 
         $expected = Schema::record()
             ->name('PrimitiveTypes')
@@ -99,7 +91,7 @@ abstract class SchemaGeneratorTest extends TestCase
      */
     public function it_should_generate_a_schema_record_with_complex_types()
     {
-        $schema = $this->generator->generate(RecordWithComplexTypes::class);
+        $schema = $this->generator->generate($this->getRecordWithComplexTypesClass());
 
         $expected = Schema::record()
             ->name('RecordWithComplexTypes')
@@ -143,7 +135,7 @@ abstract class SchemaGeneratorTest extends TestCase
      */
     public function it_should_generate_records_containing_records()
     {
-        $schema = $this->generator->generate(RecordWithRecordType::class);
+        $schema = $this->generator->generate($this->getRecordWithRecordTypeClass());
 
         $expected = Schema::record()
             ->name('RecordWithRecordType')
@@ -175,7 +167,7 @@ abstract class SchemaGeneratorTest extends TestCase
      */
     public function it_should_generate_a_record_schema_with_arrays_containing_complex_types()
     {
-        $schema = $this->generator->generate(ArraysWithComplexType::class);
+        $schema = $this->generator->generate($this->getArraysWithComplexTypeClass());
 
         $expected = Schema::record()
             ->name('ArraysWithComplexType')
@@ -205,7 +197,7 @@ abstract class SchemaGeneratorTest extends TestCase
      */
     public function it_should_generate_a_record_schema_with_maps_containing_complex_types()
     {
-        $schema = $this->generator->generate(MapsWithComplexType::class);
+        $schema = $this->generator->generate($this->getMapsWithComplexTypeClass());
 
         $expected = Schema::record()
             ->name('MapsWithComplexType')
@@ -229,4 +221,18 @@ abstract class SchemaGeneratorTest extends TestCase
 
         $this->assertEquals($expected, $schema);
     }
+
+    abstract protected function makeSchemaAttributeReader(): SchemaAttributeReader;
+
+    abstract protected function getEmptyRecordClass(): string;
+
+    abstract protected function getPrimitiveTypesClass(): string;
+
+    abstract protected function getRecordWithComplexTypesClass(): string;
+
+    abstract protected function getRecordWithRecordTypeClass(): string;
+
+    abstract protected function getArraysWithComplexTypeClass(): string;
+
+    abstract protected function getMapsWithComplexTypeClass(): string;
 }

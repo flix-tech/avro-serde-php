@@ -13,11 +13,14 @@ use FlixTech\AvroSerializer\Objects\Schema\Generation\TypeOnlyAttribute;
  */
 final class AvroItems implements TypeOnlyAttribute
 {
+    /**
+     * @var mixed
+     */
     public $value;
 
     public function value(): array
     {
-        $value = is_array($this->value) ? $this->value : [$this->value];
+        $value = \is_array($this->value) ? $this->value : [$this->value];
 
         return array_map(function ($value) {
             if ($value instanceof AvroType) {
