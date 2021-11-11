@@ -75,6 +75,10 @@ platform:
 	docker-compose up -d
 	bin/wait-for-all.sh
 
+platform-logs:
+	docker-compose ps
+	docker-compose logs schema_registry
+
 clean:
 	rm -rf build
 	docker-compose down

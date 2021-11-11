@@ -200,6 +200,7 @@ jobs:
         run: |
           chmod a+x bin/wait-for-all.sh bin/wait-for-it.sh
           make platform
+          make platform-logs
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
             vendor/bin/phpunit --group integration
