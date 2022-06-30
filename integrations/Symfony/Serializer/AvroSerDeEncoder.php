@@ -51,7 +51,7 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
      * @throws \AvroSchemaParseException
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
-    public function encode($data, $format, array $context = [])
+    public function encode($data, $format, array $context = []): string
     {
         $this->validateEncodeContext($context);
 
