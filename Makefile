@@ -11,7 +11,7 @@ ZOOKEEPER_IPV4 ?= 192.168.104.101
 COMPOSER ?= bin/composer.phar
 COMPOSER_VERSION ?= 2.1.9
 PHP_STAN ?= bin/phpstan.phar
-PHP_STAN_VERSION ?= 0.12.99
+PHP_STAN_VERSION ?= 1.0.1
 PHP_CS_FIXER ?= bin/php-cs-fixer.phar
 PHP_CS_FIXER_VERSION ?= 3.2.1
 PHPUNIT ?= vendor/bin/phpunit
@@ -74,6 +74,10 @@ platform:
 	docker-compose down
 	docker-compose up -d
 	bin/wait-for-all.sh
+
+platform-logs:
+	docker-compose ps
+	docker-compose logs schema_registry
 
 clean:
 	rm -rf build

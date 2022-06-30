@@ -33,6 +33,10 @@ jobs:
           -
             version: 8.0
             xdebug: 3.1.1
+
+          -
+            version: 8.1.0RC3
+            xdebug: 3.1.1
     runs-on: ubuntu-20.04
     steps:
       -
@@ -82,10 +86,16 @@ jobs:
             version: 8.0
             composer: --prefer-lowest
           -
+            version: 8.1.0RC3
+            composer: --prefer-lowest
+          -
             version: 7.4
             composer: --prefer-stable
           -
             version: 8.0
+            composer: --prefer-stable
+          -
+            version: 8.1.0RC3
             composer: --prefer-stable
     steps:
       -
@@ -190,6 +200,7 @@ jobs:
         run: |
           chmod a+x bin/wait-for-all.sh bin/wait-for-it.sh
           make platform
+          make platform-logs
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
             vendor/bin/phpunit --group integration

@@ -1,6 +1,6 @@
 ARG PHP_VERSION=7.4
 
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:${PHP_VERSION}-cli-alpine3.13
 
 ARG XDEBUG_VERSION=3.1.1
 

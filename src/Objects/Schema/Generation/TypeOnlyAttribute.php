@@ -9,4 +9,10 @@ namespace FlixTech\AvroSerializer\Objects\Schema\Generation;
  */
 interface TypeOnlyAttribute extends SchemaAttribute
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @return array<SchemaAttribute>
+     */
+    public function value(): array;
 }

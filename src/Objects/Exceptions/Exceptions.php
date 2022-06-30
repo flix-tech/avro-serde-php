@@ -8,6 +8,7 @@ final class Exceptions
 {
     public const ERROR_ENCODING = 501;
     public const ERROR_DECODING = 502;
+    public const ERROR_PHP_VERSION = 503;
 
     /**
      * @param mixed $record
@@ -40,5 +41,20 @@ Binary Message (as Hex):
 MESSAGE;
 
         return new AvroDecodingException($message, self::ERROR_DECODING, $previous);
+    }
+
+    public static function forPhpVersion(string $currentVersion, string $minimumVersion): UnsupportedPhpVersionException
+    {
+        $message = sprintf(
+            'The current php version \'%s\' is not supported for this feature. ' .
+            'Minimum supported version is \'%s\'',
+            $currentVersion,
+            $minimumVersion,
+        );
+
+        return new UnsupportedPhpVersionException(
+            $message,
+            self::ERROR_PHP_VERSION
+        );
     }
 }

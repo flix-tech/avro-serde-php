@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture;
+namespace FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\Annotations;
 
 use FlixTech\AvroSerializer\Objects\Schema\Generation\Annotations as SerDe;
 
