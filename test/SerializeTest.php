@@ -7,7 +7,9 @@ use FlixTech\AvroSerializer\Objects\Exceptions\AvroDecodingException;
 use FlixTech\AvroSerializer\Objects\Exceptions\AvroEncodingException;
 use Widmogrod\Monad\Either\Left;
 use Widmogrod\Monad\Either\Right;
+
 use const FlixTech\AvroSerializer\Serialize\writeDatum;
+
 use function FlixTech\AvroSerializer\Serialize\avroBinaryDecoder;
 use function FlixTech\AvroSerializer\Serialize\avroBinaryEncoder;
 use function FlixTech\AvroSerializer\Serialize\avroDatumReader;

@@ -6,6 +6,7 @@ namespace FlixTech\AvroSerializer\Test\Objects\SchemaResolvers;
 
 use FlixTech\AvroSerializer\Objects\SchemaResolvers\CallableResolver;
 use FlixTech\AvroSerializer\Test\AbstractFunctionalTestCase;
+
 use function Widmogrod\Functional\constt;
 
 class CallableResolverTest extends AbstractFunctionalTestCase

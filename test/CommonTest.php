@@ -6,10 +6,12 @@ namespace FlixTech\AvroSerializer\Test;
 
 use Widmogrod\Monad\Maybe\Just;
 use Widmogrod\Monad\Maybe\Nothing;
+
 use const FlixTech\AvroSerializer\Common\get;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_AVRO;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_SCHEMA_ID;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_VERSION;
+
 use function FlixTech\AvroSerializer\Common\get;
 use function FlixTech\AvroSerializer\Common\getter;
 use function Widmogrod\Functional\curryN;

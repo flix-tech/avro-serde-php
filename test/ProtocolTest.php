@@ -7,12 +7,14 @@ use Widmogrod\Monad\Either\Left;
 use Widmogrod\Monad\Either\Right;
 use Widmogrod\Monad\Maybe\Just;
 use Widmogrod\Monad\Maybe\Nothing;
+
 use const FlixTech\AvroSerializer\Protocol\encode;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_AVRO;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_SCHEMA_ID;
 use const FlixTech\AvroSerializer\Protocol\PROTOCOL_ACCESSOR_VERSION;
 use const FlixTech\AvroSerializer\Protocol\validate;
 use const FlixTech\AvroSerializer\Protocol\WIRE_FORMAT_PROTOCOL_VERSION;
+
 use function FlixTech\AvroSerializer\Protocol\decode;
 use function FlixTech\AvroSerializer\Protocol\encode;
 use function FlixTech\AvroSerializer\Protocol\encoder;

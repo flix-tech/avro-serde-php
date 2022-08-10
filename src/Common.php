@@ -3,6 +3,7 @@
 namespace FlixTech\AvroSerializer\Common;
 
 use Widmogrod\Monad\Maybe\Maybe;
+
 use function Widmogrod\Functional\curryN;
 use function Widmogrod\Monad\Maybe\just;
 use function Widmogrod\Monad\Maybe\nothing;

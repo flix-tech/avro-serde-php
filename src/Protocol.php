@@ -9,6 +9,7 @@ use Widmogrod\Monad\Either\Either;
 use Widmogrod\Monad\Either\Left;
 use Widmogrod\Monad\Either\Right;
 use Widmogrod\Monad\Maybe\Maybe;
+
 use function Widmogrod\Functional\curryN;
 use function Widmogrod\Monad\Maybe\just;
 use function Widmogrod\Monad\Maybe\nothing;
