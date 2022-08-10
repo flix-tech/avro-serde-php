@@ -12,6 +12,7 @@ use FlixTech\AvroSerializer\Objects\Exceptions\Exceptions;
 use Widmogrod\Monad\Either\Either;
 use Widmogrod\Monad\Either\Left;
 use Widmogrod\Monad\Either\Right;
+
 use function Widmogrod\Functional\curryN;
 use function Widmogrod\Functional\tryCatch;
 

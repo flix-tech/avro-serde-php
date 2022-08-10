@@ -14,6 +14,7 @@ use FlixTech\SchemaRegistryApi\Registry;
 use GuzzleHttp\Promise\FulfilledPromise;
 use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
+
 use function FlixTech\AvroSerializer\Common\memoize;
 
 class RecordSerializerTest extends AbstractFunctionalTestCase

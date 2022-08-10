@@ -10,7 +10,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      avro-serializer-net:
+      schema-registry-net:
         ipv4_address: ${ZOOKEEPER_IPV4}
 
   broker:
@@ -23,9 +23,10 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://${KAFKA_BROKER_IPV4}:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://172.68.0.102:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      avro-serializer-net:
+      schema-registry-net:
         ipv4_address: ${KAFKA_BROKER_IPV4}
 
   schema_registry:
@@ -39,13 +40,17 @@ services:
     environment:
       SCHEMA_REGISTRY_HOST_NAME: ${SCHEMA_REGISTRY_IPV4}
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_LISTENERS: "http://${SCHEMA_REGISTRY_IPV4}:8081"
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://172.68.0.102:9092'
     networks:
-      avro-serializer-net:
+      schema-registry-net:
         ipv4_address: ${SCHEMA_REGISTRY_IPV4}
 
 networks:
-  avro-serializer-net:
+  schema-registry-net:
     driver: bridge
     ipam:
+      driver: default
       config:
-      - subnet: ${CONFLUENT_NETWORK_SUBNET}
+        - subnet: "${CONFLUENT_NETWORK_SUBNET}"
+          gateway: "${CONFLUENT_NETWORK_GATEWAY}"

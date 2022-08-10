@@ -29,10 +29,13 @@ jobs:
         php:
           -
             version: 7.4
-            xdebug: 3.1.1
+            xdebug: 3.1.5
           -
             version: 8.0
-            xdebug: 3.1.1
+            xdebug: 3.1.5
+          -
+            version: 8.1
+            xdebug: 3.1.5
     runs-on: ubuntu-20.04
     steps:
       -
@@ -82,10 +85,16 @@ jobs:
             version: 8.0
             composer: --prefer-lowest
           -
+            version: 8.1
+            composer: --prefer-lowest
+          -
             version: 7.4
             composer: --prefer-stable
           -
             version: 8.0
+            composer: --prefer-stable
+          -
+            version: 8.1
             composer: --prefer-stable
     steps:
       -
@@ -137,10 +146,10 @@ jobs:
           mkdir -p build
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
             -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:${{ matrix.php.version }} \
-            vendor/bin/phpunit --exclude-group integration --coverage-clover=build/coverage.clover --coverage-text
+            -d xdebug.mode=coverage vendor/bin/phpunit --exclude-group integration --coverage-clover=build/coverage.clover --coverage-text
       - name: Publish code coverage
         if: ${{ matrix.php.version == '7.4' && matrix.php.composer == '--prefer-stable' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        uses: paambaati/codeclimate-action@v2.7.4
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CODE_CLIMATE_REPORTER_ID}}
         with:

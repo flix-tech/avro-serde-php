@@ -1,8 +1,8 @@
-ARG PHP_VERSION=7.4
+ARG PHP_VERSION=8.1
 
 FROM php:${PHP_VERSION}-cli-alpine
 
-ARG XDEBUG_VERSION=3.1.1
+ARG XDEBUG_VERSION=3.1.5
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN composer --version

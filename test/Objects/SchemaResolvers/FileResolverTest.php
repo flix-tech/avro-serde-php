@@ -6,6 +6,7 @@ namespace FlixTech\AvroSerializer\Test\Objects\SchemaResolvers;
 
 use FlixTech\AvroSerializer\Objects\SchemaResolvers\FileResolver;
 use PHPUnit\Framework\TestCase;
+
 use function FlixTech\AvroSerializer\Common\inflectRecord;
 
 class FileResolverTest extends TestCase
