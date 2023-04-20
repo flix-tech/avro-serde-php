@@ -23,7 +23,7 @@
     }
   ],
   "require": {
-    "php": "^7.3|^8.0|^8.1",
+    "php": "^7.3|^8.0",
     "beberlei/assert": "^2.9.9|~3.0",
     "flix-tech/confluent-schema-registry-api": "^7.6.0",
     "guzzlehttp/promises": "^1.4.0",
