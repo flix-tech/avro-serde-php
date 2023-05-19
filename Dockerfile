@@ -12,6 +12,7 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && docker-php-source extract \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip \
+    && apk add --update linux-headers \
     && mkdir -p /usr/src/php/ext/xdebug \
     && curl -fsSL https://github.com/xdebug/xdebug/archive/$XDEBUG_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/xdebug --strip 1 \
     && docker-php-ext-install xdebug \
