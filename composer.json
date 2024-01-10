@@ -26,7 +26,7 @@
     "php": "^7.3|^8.0",
     "beberlei/assert": "^2.9.9|~3.0",
     "flix-tech/confluent-schema-registry-api": "^8.0",
-    "guzzlehttp/promises": "^1.4.0",
+    "guzzlehttp/promises": "^1.4.0 || ^2.0.0",
     "flix-tech/avro-php": "^5.0",
     "widmogrod/php-functional": "^6.0"
   },
