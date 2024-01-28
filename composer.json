@@ -23,7 +23,7 @@
     }
   ],
   "require": {
-    "php": "^7.3|^8.0",
+    "php": "^8.1",
     "beberlei/assert": "^2.9.9|~3.0",
     "flix-tech/confluent-schema-registry-api": "^8.0",
     "guzzlehttp/promises": "^1.4.0|^2.0.0",
@@ -35,7 +35,7 @@
     "phpunit/phpunit": "^9.4.2",
     "phpbench/phpbench": "1.0.0-alpha2",
     "vlucas/phpdotenv": "~2.4",
-    "symfony/serializer": "^3.4|^4.3",
+    "symfony/serializer": "^6.4|^7.0",
     "doctrine/annotations": "^1.11"
   },
   "autoload": {
