@@ -32,7 +32,7 @@ class AvroSerDeEncoder implements EncoderInterface, DecoderInterface
      *
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
-    public function decode($data, $format, array $context = [])
+    public function decode($data, $format, array $context = []): mixed
     {
         $readersSchema = $context[self::CONTEXT_DECODE_READERS_SCHEMA] ?? null;
         Assert::that($readersSchema)->nullOr()->isInstanceOf(\AvroSchema::class);
