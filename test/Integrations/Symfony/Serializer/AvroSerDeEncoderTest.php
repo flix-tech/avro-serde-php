@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test\Integrations\Symfony\Serializer;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder;
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use FlixTech\AvroSerializer\Test\AbstractFunctionalTestCase;
@@ -33,27 +35,21 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
         $this->avroSerDeEncoder = new AvroSerDeEncoder($this->recordSerializerMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_only_support_encoding_Avro_format(): void
     {
         $this->assertTrue($this->avroSerDeEncoder->supportsEncoding(AvroSerDeEncoder::FORMAT_AVRO));
         $this->assertFalse($this->avroSerDeEncoder->supportsEncoding('any'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_only_support_decoding_Avro_format(): void
     {
         $this->assertTrue($this->avroSerDeEncoder->supportsDecoding(AvroSerDeEncoder::FORMAT_AVRO));
         $this->assertFalse($this->avroSerDeEncoder->supportsDecoding('any'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_encode_with_valid_encode_context(): void
     {
         $context = [
@@ -75,15 +71,21 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
         $this->assertSame('success', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_decode_with_valid_decode_context(): void
     {
-        $this->recordSerializerMock->expects($this->exactly(2))
-            ->method('decodeMessage')
-            ->withConsecutive([AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, null], [AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, $this->readersSchema])
-            ->willReturnOnConsecutiveCalls('success-1', 'success-2');
+        $matcher = $this->exactly(2);
+        $this->recordSerializerMock->expects($matcher)
+            ->method('decodeMessage')->willReturnCallback(function ($parameters) use ($matcher) {
+            match ($matcher->numberOfInvocations()) {
+                1 => self::assertEquals([AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, null], $parameters),
+                2 => self::assertEquals([AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN, $this->readersSchema], $parameters),
+            };
+            return match ($matcher->numberOfInvocations()) {
+                1 => 'success-1',
+                2 => 'success-2',
+            };
+        });
 
         $result = $this->avroSerDeEncoder->decode(
             AbstractFunctionalTestCase::AVRO_ENCODED_RECORD_HEX_BIN,
@@ -103,10 +105,8 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
         $this->assertSame('success-2', $result);
     }
 
-    /**
-     * @test
-     * @dataProvider encodeContextValidationDataProvider
-     */
+    #[DataProvider('encodeContextValidationDataProvider')]
+    #[Test]
     public function it_should_validate_encode_context(array $context): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -120,7 +120,7 @@ class AvroSerDeEncoderTest extends AbstractFunctionalTestCase
         );
     }
 
-    public static function encodeContextValidationDataProvider(): ?\Generator
+    public static function encodeContextValidationDataProvider(): \Generator
     {
         yield 'Invalid writer\'s schema in encode context' => [
             [

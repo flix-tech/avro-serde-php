@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test;
 
-use AvroSchema;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractFunctionalTestCase extends TestCase
@@ -53,28 +52,19 @@ JSON;
     public const INVALID_AVRO_ENCODED_RECORD_HEX_BIN = '0c54615f6d608348';
     public const INVALID_BIN_WRONG_VERSION = '44686f6d617348';
 
-    /**
-     * @var AvroSchema
-     */
-    protected $avroSchema;
+    protected ?\AvroSchema $avroSchema;
 
-    /**
-     * @var AvroSchema
-     */
-    protected $readersSchema;
+    protected ?\AvroSchema $readersSchema;
 
-    /**
-     * @var AvroSchema
-     */
-    protected $invalidSchema;
+    protected ?\AvroSchema $invalidSchema;
 
     /**
      * @throws \AvroSchemaParseException
      */
     protected function setUp(): void
     {
-        $this->avroSchema = AvroSchema::parse(self::SCHEMA_JSON);
-        $this->readersSchema = AvroSchema::parse(self::READERS_SCHEMA_JSON);
-        $this->invalidSchema = AvroSchema::parse(self::INVALID_READERS_SCHEMA_JSON);
+        $this->avroSchema = \AvroSchema::parse(self::SCHEMA_JSON);
+        $this->readersSchema = \AvroSchema::parse(self::READERS_SCHEMA_JSON);
+        $this->invalidSchema = \AvroSchema::parse(self::INVALID_READERS_SCHEMA_JSON);
     }
 }

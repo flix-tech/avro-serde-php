@@ -20,6 +20,10 @@
     {
       "name": "Thomas Ploch",
       "email": "thomas.ploch@flixbus.com"
+    },
+    {
+      "name": "Mattia Basone",
+      "email": "mattia.basone@gmail.com"
     }
   ],
   "require": {
@@ -32,11 +36,12 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "phpunit/phpunit": "^9.4.2",
+    "phpunit/phpunit": "^10.5",
     "phpbench/phpbench": "1.0.0-alpha2",
     "vlucas/phpdotenv": "~2.4",
     "symfony/serializer": "^6.4|^7.0",
-    "doctrine/annotations": "^1.11"
+    "doctrine/annotations": "^1.11",
+    "rector/rector": "^1.2"
   },
   "autoload": {
     "psr-4": {

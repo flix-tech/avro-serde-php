@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test\Objects;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\Depends;
+use FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException;
 use FlixTech\AvroSerializer\Objects\DefaultRecordSerializerFactory;
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use FlixTech\AvroSerializer\Test\AbstractFunctionalTestCase;
 use FlixTech\SchemaRegistryApi\Exception\IncompatibleAvroSchemaException;
 
-/**
- * @group integration
- */
+#[Group('integration')]
 class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
 {
     /**
-     * @test
-     *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
+    #[Test]
     public function it_encodes_valid_records(): RecordSerializer
     {
         $serializer = DefaultRecordSerializerFactory::get(\getenv('SCHEMA_REGISTRY_HOST'));
@@ -31,12 +32,12 @@ class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @test
      *
-     * @depends it_encodes_valid_records
      *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
+    #[Depends('it_encodes_valid_records')]
+    #[Test]
     public function it_cannot_evolve_incompatible_schema(RecordSerializer $serializer): void
     {
         $this->expectException(IncompatibleAvroSchemaException::class);
@@ -44,12 +45,12 @@ class RecordSerializerIntegrationTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @test
      *
-     * @depends it_encodes_valid_records
      *
-     * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
+     * @throws SchemaRegistryException
      */
+    #[Depends('it_encodes_valid_records')]
+    #[Test]
     public function it_decodes_with_readers_schema(RecordSerializer $serializer): RecordSerializer
     {
         $encoded = $serializer->encodeRecord('test-value', $this->avroSchema, self::TEST_RECORD);

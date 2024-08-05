@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test\Integrations\Symfony\Serializer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use FlixTech\AvroSerializer\Integrations\Symfony\Serializer\AvroSerDeEncoder;
 use FlixTech\AvroSerializer\Integrations\Symfony\Serializer\NameConverter\AvroNameConverter;
@@ -30,9 +31,7 @@ class AvroNameConverterTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_return_the_normalized_property_name(): void
     {
         $normalizedName = $this->nameConverter
@@ -40,9 +39,7 @@ class AvroNameConverterTest extends TestCase
         $this->assertEquals('Name', $normalizedName);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_return_the_denormalized_property_name(): void
     {
         $normalizedName = $this->nameConverter

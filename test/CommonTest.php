@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use Widmogrod\Monad\Maybe\Just;
 use Widmogrod\Monad\Maybe\Nothing;
 
@@ -18,9 +19,7 @@ use function Widmogrod\Functional\curryN;
 
 class CommonTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function get_should_return_Maybe_monad(): void
     {
         $array = [
@@ -36,9 +35,7 @@ class CommonTest extends AbstractFunctionalTestCase
         $this->assertInstanceOf(Nothing::class, get('INVALID', $array));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getter_returns_curried_get(): void
     {
         $this->assertEquals(

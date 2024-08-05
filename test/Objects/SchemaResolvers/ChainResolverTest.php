@@ -2,6 +2,7 @@
 
 namespace FlixTech\AvroSerializer\Test\Objects\SchemaResolvers;
 
+use PHPUnit\Framework\Attributes\Test;
 use FlixTech\AvroSerializer\Objects\SchemaResolverInterface;
 use FlixTech\AvroSerializer\Objects\SchemaResolvers\ChainResolver;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,10 +37,9 @@ class ChainResolverTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_will_exit_early_when_a_schema_has_been_resolved(): void
     {
         $record = 'I am a record';
@@ -59,10 +59,9 @@ class ChainResolverTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_will_exit_early_when_a_key_schema_has_been_resolved(): void
     {
         $record = 'I am a record';
@@ -82,10 +81,9 @@ class ChainResolverTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_will_call_all_resolvers(): void
     {
         $record = 'I am a record';
@@ -107,10 +105,9 @@ class ChainResolverTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_will_call_all_resolvers_for_key_schemas(): void
     {
         $record = 'I am a record';
@@ -131,9 +128,7 @@ class ChainResolverTest extends TestCase
         $this->assertEquals($avroSchema, $actual);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_call_all_resolvers_and_throw_for_value_when_no_resolver_has_a_result(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -153,9 +148,7 @@ class ChainResolverTest extends TestCase
         $this->chain->valueSchemaFor($record);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_call_all_resolvers_and_return_null_when_no_key_resolver_has_a_result(): void
     {
         $record = 'I am a record';

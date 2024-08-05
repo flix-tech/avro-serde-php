@@ -2,6 +2,7 @@
 
 namespace FlixTech\AvroSerializer\Test\Objects\SchemaResolvers;
 
+use PHPUnit\Framework\Attributes\Test;
 use FlixTech\AvroSerializer\Objects\HasSchemaDefinitionInterface;
 use FlixTech\AvroSerializer\Objects\SchemaResolvers\DefinitionInterfaceResolver;
 use PHPUnit\Framework\TestCase;
@@ -9,10 +10,9 @@ use PHPUnit\Framework\TestCase;
 class DefinitionInterfaceResolverTest extends TestCase
 {
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_should_allow_correct_interfaces(): void
     {
         $definitionInterfaceResolver = new DefinitionInterfaceResolver();
@@ -43,9 +43,7 @@ class DefinitionInterfaceResolverTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_fail_for_records_not_implementing_the_interface_for_value_schema(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -54,9 +52,7 @@ class DefinitionInterfaceResolverTest extends TestCase
         $definitionInterfaceResolver->valueSchemaFor([]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_fail_for_records_not_implementing_the_interface_for_key_schema(): void
     {
         $this->expectException(\InvalidArgumentException::class);

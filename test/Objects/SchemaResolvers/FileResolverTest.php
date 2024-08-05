@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test\Objects\SchemaResolvers;
 
+use PHPUnit\Framework\Attributes\Test;
+use Widmogrod\Common\ValueOfInterface;
 use FlixTech\AvroSerializer\Objects\SchemaResolvers\FileResolver;
 use PHPUnit\Framework\TestCase;
 
@@ -12,10 +14,9 @@ use function FlixTech\AvroSerializer\Common\inflectRecord;
 class FileResolverTest extends TestCase
 {
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_should_find_value_and_key_schemas_when_defined(): void
     {
         $fileSchemaResolver = $this->getFileSchemaResolverInstance();
@@ -33,10 +34,9 @@ class FileResolverTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_should_fail_for_non_existing_value_schema(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -47,10 +47,9 @@ class FileResolverTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_should_fail_for_value_schema_for_invalid_inflector_result(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -65,10 +64,9 @@ class FileResolverTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws \AvroSchemaParseException
      */
+    #[Test]
     public function it_should_fail_for_key_schema_for_invalid_inflector_result(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -89,7 +87,7 @@ class FileResolverTest extends TestCase
         $inflector = static function ($record, bool $isKey) {
             $ext = $isKey ? '.key.json' : '.json';
 
-            /** @var \Widmogrod\Common\ValueOfInterface $inflectedString */
+            /** @var ValueOfInterface $inflectedString */
             $inflectedString = inflectRecord($record)
                 ->map(
                     static function ($inflectedObjectName) use ($ext) {

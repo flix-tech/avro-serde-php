@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FlixTech\AvroSerializer\Test\Objects\Schema\Generation;
 
+use FlixTech\AvroSerializer\Objects\Schema\Generation\SchemaGenerator;
+use FlixTech\AvroSerializer\Objects\Schema\Generation\AttributeReader;
+use PHPUnit\Framework\Attributes\Test;
+use FlixTech\AvroSerializer\Objects\Schema\Record\FieldOption;
+use FlixTech\AvroSerializer\Objects\Schema\Record\FieldOrder;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use FlixTech\AvroSerializer\Objects\Schema;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\ArraysWithComplexType;
 use FlixTech\AvroSerializer\Test\Objects\Schema\Generation\Fixture\EmptyRecord;
@@ -17,28 +21,27 @@ use PHPUnit\Framework\TestCase;
 
 class SchemaGeneratorTest extends TestCase
 {
-    /**
-     * @var Schema\Generation\SchemaGenerator
-     */
-    private $generator;
+    private ?SchemaGenerator $generatorDoctrineAnnotations;
+
+    private ?SchemaGenerator $generatorAttributes;
 
     protected function setUp(): void
     {
-        AnnotationRegistry::registerLoader('class_exists');
-
-        $this->generator = new Schema\Generation\SchemaGenerator(
+        $this->generatorDoctrineAnnotations = new SchemaGenerator(
             new Schema\Generation\AnnotationReader(
                 new AnnotationReader()
             )
         );
+
+        $this->generatorAttributes = new SchemaGenerator(
+            new AttributeReader()
+        );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_generate_an_empty_record()
     {
-        $schema = $this->generator->generate(EmptyRecord::class);
+        $schema = $this->generatorDoctrineAnnotations->generate(EmptyRecord::class);
 
         $expected = Schema::record()
             ->name('EmptyRecord')
@@ -47,12 +50,10 @@ class SchemaGeneratorTest extends TestCase
         $this->assertEquals($expected, $schema);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_generate_a_record_schema_with_primitive_types()
     {
-        $schema = $this->generator->generate(PrimitiveTypes::class);
+        $schema = $this->generatorDoctrineAnnotations->generate(PrimitiveTypes::class);
 
         $expected = Schema::record()
             ->name('PrimitiveTypes')
@@ -60,12 +61,12 @@ class SchemaGeneratorTest extends TestCase
             ->field(
                 'nullType',
                 Schema::null(),
-                Schema\Record\FieldOption::doc('null type')
+                FieldOption::doc('null type')
             )
             ->field(
                 'isItTrue',
                 Schema::boolean(),
-                Schema\Record\FieldOption::default(false)
+                FieldOption::default(false)
             )
             ->field(
                 'intType',
@@ -74,12 +75,12 @@ class SchemaGeneratorTest extends TestCase
             ->field(
                 'longType',
                 Schema::long(),
-                Schema\Record\FieldOption::orderAsc()
+                FieldOption::orderAsc()
             )
             ->field(
                 'floatType',
                 Schema::float(),
-                Schema\Record\FieldOption::aliases('foo', 'bar')
+                FieldOption::aliases('foo', 'bar')
             )
             ->field(
                 'doubleType',
@@ -97,12 +98,10 @@ class SchemaGeneratorTest extends TestCase
         $this->assertEquals($expected, $schema);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_generate_a_schema_record_with_complex_types()
     {
-        $schema = $this->generator->generate(RecordWithComplexTypes::class);
+        $schema = $this->generatorDoctrineAnnotations->generate(RecordWithComplexTypes::class);
 
         $expected = Schema::record()
             ->name('RecordWithComplexTypes')
@@ -123,7 +122,7 @@ class SchemaGeneratorTest extends TestCase
                 Schema::enum()
                     ->name('Suit')
                     ->symbols('SPADES', 'HEARTS', 'DIAMONDS', 'CLUBS'),
-                Schema\Record\FieldOrder::asc()
+                FieldOrder::asc()
             )
             ->field(
                 'fixed',
@@ -141,12 +140,10 @@ class SchemaGeneratorTest extends TestCase
         $this->assertEquals($expected, $schema);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_generate_records_containing_records()
     {
-        $schema = $this->generator->generate(RecordWithRecordType::class);
+        $schema = $this->generatorDoctrineAnnotations->generate(RecordWithRecordType::class);
 
         $expected = Schema::record()
             ->name('RecordWithRecordType')
@@ -159,7 +156,7 @@ class SchemaGeneratorTest extends TestCase
                     ->field(
                         'intType',
                         Schema::int(),
-                        Schema\Record\FieldOption::default(42)
+                        FieldOption::default(42)
                     ),
             )
             ->field(
@@ -173,12 +170,39 @@ class SchemaGeneratorTest extends TestCase
         $this->assertEquals($expected, $schema);
     }
 
-    /**
-     * @test
-     */
+    public function test_it_should_generate_records_containing_records_using_attributes(): void
+    {
+        $schema = $this->generatorAttributes->generate(RecordWithRecordType::class);
+
+        $expected = Schema::record()
+            ->name('RecordWithRecordType')
+            ->field(
+                'simpleField',
+                Schema::record()
+                    ->name('SimpleRecord')
+                    ->namespace('org.acme')
+                    ->doc('This a simple record for testing purposes')
+                    ->field(
+                        'intType',
+                        Schema::int(),
+                        FieldOption::default(42)
+                    ),
+            )
+            ->field(
+                'unionField',
+                Schema::union(
+                    Schema::null(),
+                    Schema::named('org.acme.SimpleRecord')
+                )
+            );
+
+        $this->assertEquals($expected, $schema);
+    }
+
+    #[Test]
     public function it_should_generate_a_record_schema_with_arrays_containing_complex_types()
     {
-        $schema = $this->generator->generate(ArraysWithComplexType::class);
+        $schema = $this->generatorDoctrineAnnotations->generate(ArraysWithComplexType::class);
 
         $expected = Schema::record()
             ->name('ArraysWithComplexType')
@@ -203,12 +227,10 @@ class SchemaGeneratorTest extends TestCase
         $this->assertEquals($expected, $schema);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_generate_a_record_schema_with_maps_containing_complex_types()
     {
-        $schema = $this->generator->generate(MapsWithComplexType::class);
+        $schema = $this->generatorDoctrineAnnotations->generate(MapsWithComplexType::class);
 
         $expected = Schema::record()
             ->name('MapsWithComplexType')
