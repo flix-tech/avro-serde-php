@@ -16,7 +16,7 @@ class Type
      */
     private $attributes;
 
-    public function __construct(string $typeName, SchemaAttributes $attributes = null)
+    public function __construct(string $typeName, ?SchemaAttributes $attributes = null)
     {
         $this->typeName = $typeName;
         $this->attributes = $attributes ?? new SchemaAttributes();

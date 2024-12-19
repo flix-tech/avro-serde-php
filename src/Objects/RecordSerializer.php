@@ -131,7 +131,7 @@ class RecordSerializer
      * @throws \Exception
      * @throws \FlixTech\SchemaRegistryApi\Exception\SchemaRegistryException
      */
-    public function decodeMessage(string $binaryMessage, AvroSchema $readersSchema = null)
+    public function decodeMessage(string $binaryMessage, ?AvroSchema $readersSchema = null)
     {
         $decoded = decode($binaryMessage);
         $schemaId = valueOf($decoded->bind($this->schemaIdGetter));
