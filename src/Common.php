@@ -48,7 +48,7 @@ const memoize = '\FlixTech\AvroSerializer\Common\memoize';
  *
  * @return mixed|null
  */
-function memoize(callable $callback = null, array $arguments = [], $key = null)
+function memoize(?callable $callback = null, array $arguments = [], $key = null)
 {
     static $storage = [];
 
