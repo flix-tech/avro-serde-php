@@ -28,17 +28,14 @@ jobs:
       matrix:
         php:
           -
-            version: '7.4'
-            xdebug: '3.1.5'
-          -
-            version: '8.0'
-            xdebug: '3.1.5'
-          -
             version: '8.1'
             xdebug: '3.1.5'
           -
             version: '8.2'
             xdebug: '3.2.1'
+          -
+            version: '8.3'
+            xdebug: '3.3.1'
     runs-on: ubuntu-20.04
     steps:
       -
@@ -82,25 +79,19 @@ jobs:
       matrix:
         php:
           -
-            version: '7.4'
-            composer: --prefer-lowest
-          -
-            version: '8.0'
-            composer: --prefer-lowest
-          -
             version: '8.1'
             composer: --prefer-lowest
           -
             version: '8.2'
             composer: --prefer-lowest
           -
-            version: '7.4'
-            composer: --prefer-stable
-          -
-            version: '8.0'
-            composer: --prefer-stable
+            version: '8.3'
+            composer: --prefer-lowest
           -
             version: '8.1'
+            composer: --prefer-stable
+          -
+            version: '8.2'
             composer: --prefer-stable
           -
             version: '8.2'
@@ -190,16 +181,16 @@ jobs:
         name: Download docker image
         uses: actions/download-artifact@v4.1.7
         with:
-          name: php-avro-serde-7.4
+          name: php-avro-serde-8.1
       -
         name: Load docker image
         run: |
-          docker load -i php-avro-serde-7.4.tgz
+          docker load -i php-avro-serde-8.1.tgz
       -
         name: Install vendors
         run: |
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
-            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:8.1 \
             composer update --no-interaction --no-scripts --no-ansi --prefer-stable
       -
         name: Run PHPUnit Integration
@@ -209,5 +200,5 @@ jobs:
           chmod a+x bin/wait-for-all.sh bin/wait-for-it.sh
           make platform
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
-            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:8.1 \
             vendor/bin/phpunit --group integration
