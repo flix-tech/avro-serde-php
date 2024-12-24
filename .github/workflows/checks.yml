@@ -206,7 +206,7 @@ jobs:
         name: Install vendors
         run: |
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
-            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:8.3 \
             composer update --no-interaction --no-scripts --no-ansi --prefer-stable
       -
         name: Run PHPUnit Integration
@@ -216,5 +216,5 @@ jobs:
           chmod a+x bin/wait-for-all.sh bin/wait-for-it.sh
           make platform
           docker run -i --rm --net=host --sig-proxy=true --pid=host \
-            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:7.4 \
+            -v "${GITHUB_WORKSPACE}":"${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" php-avro-serde:8.3 \
             vendor/bin/phpunit --group integration
